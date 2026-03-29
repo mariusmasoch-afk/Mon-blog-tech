@@ -97,7 +97,7 @@
 
       <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">Général</p>
 
-      <div class="nav-item" onclick="setActive(this)">
+      <div class="nav-item active" onclick="showView('dashboard')">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6"/>
         </svg>
@@ -106,21 +106,21 @@
 
       <p class="px-3 pt-4 mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">Contenu</p>
 
-      <div class="nav-item" onclick="setActive(this)">
+      <div class="nav-item" onclick="showView('articles')">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
         Tous les articles
       </div>
 
-      <div class="nav-item active" onclick="setActive(this)">
+      <div class="nav-item" onclick="showView('editor')">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
         </svg>
         Nouvel article
       </div>
 
-      <div class="nav-item" onclick="setActive(this)">
+      <div class="nav-item" onclick="showView('medias')">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
         </svg>
@@ -129,7 +129,7 @@
 
       <p class="px-3 pt-4 mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">Système</p>
 
-      <div class="nav-item" onclick="setActive(this)">
+      <div class="nav-item" onclick="showView('settings')">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -159,9 +159,9 @@
     <!-- Top bar -->
     <header class="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 shrink-0">
       <div class="flex items-center gap-3">
-        <span class="text-sm text-gray-400">Contenu</span>
+        <span id="breadcrumb-section" class="text-sm text-gray-400">Général</span>
         <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        <span class="text-sm font-medium text-gray-700">Nouvel article</span>
+        <span id="breadcrumb-page" class="text-sm font-medium text-gray-700">Tableau de bord</span>
       </div>
       <div class="flex items-center gap-2 text-sm text-gray-400">
         <span id="save-status" class="flex items-center gap-1.5">
@@ -171,8 +171,81 @@
       </div>
     </header>
 
-    <!-- Editor + Right panel -->
-    <div class="flex-1 flex overflow-hidden">
+    <!-- ===================== VUE : TABLEAU DE BORD ===================== -->
+    <div id="view-dashboard" class="flex-1 overflow-y-auto bg-gray-50 p-8 hidden">
+      <h2 class="text-xl font-bold text-gray-900 mb-6">Tableau de bord</h2>
+
+      <!-- Stat cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Articles publiés</p>
+            <p id="stat-published" class="text-2xl font-bold text-gray-900 mt-0.5">—</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Brouillons</p>
+            <p id="stat-drafts" class="text-2xl font-bold text-gray-900 mt-0.5">—</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Catégories actives</p>
+            <p id="stat-cats" class="text-2xl font-bold text-gray-900 mt-0.5">—</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Articles récents -->
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <h3 class="font-semibold text-gray-800">Articles récents</h3>
+          <button onclick="showView('editor')" class="text-xs font-medium text-brand-600 hover:text-brand-700">+ Nouvel article</button>
+        </div>
+        <div id="dashboard-articles" class="divide-y divide-gray-50">
+          <p class="px-6 py-8 text-sm text-gray-400 text-center">Chargement…</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== VUE : TOUS LES ARTICLES ===================== -->
+    <div id="view-articles" class="flex-1 overflow-y-auto bg-gray-50 p-8 hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-gray-900">Tous les articles</h2>
+        <button onclick="showView('editor')" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium hover:bg-gray-700 transition-colors">
+          + Nouvel article
+        </button>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-gray-100 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <th class="text-left px-6 py-3">Titre</th>
+              <th class="text-left px-4 py-3 hidden sm:table-cell">Catégorie</th>
+              <th class="text-left px-4 py-3 hidden md:table-cell">Date</th>
+              <th class="text-left px-4 py-3">Statut</th>
+              <th class="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody id="articles-table-body">
+            <tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===================== VUE : ÉDITEUR ===================== -->
+    <div id="view-editor" class="flex-1 flex overflow-hidden hidden">
 
       <!-- ---- EDITOR ---- -->
       <main class="flex-1 overflow-y-auto bg-white">
@@ -436,7 +509,67 @@
       </aside>
 
     </div>
-  </div>
+    </div><!-- fin view-editor -->
+
+    <!-- ===================== VUE : MÉDIAS ===================== -->
+    <div id="view-medias" class="flex-1 overflow-y-auto bg-gray-50 p-8 hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-gray-900">Médias</h2>
+        <label class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium hover:bg-gray-700 transition-colors cursor-pointer">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          Importer
+          <input type="file" accept="image/*" multiple class="hidden" onchange="importMedias(this)" />
+        </label>
+      </div>
+      <div id="media-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="aspect-square rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-300 cursor-pointer hover:border-brand-400 hover:text-brand-400 transition-colors" onclick="document.querySelector('#view-medias input[type=file]').click()">
+          <svg class="w-8 h-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          <span class="text-xs font-medium">Ajouter</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== VUE : PARAMÈTRES ===================== -->
+    <div id="view-settings" class="flex-1 overflow-y-auto bg-gray-50 p-8 hidden">
+      <h2 class="text-xl font-bold text-gray-900 mb-6">Paramètres</h2>
+      <div class="max-w-xl space-y-6">
+
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+          <h3 class="font-semibold text-gray-800">Identité du blog</h3>
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Nom du blog</label>
+            <input type="text" value="BytePulse" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
+          </div>
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Description</label>
+            <textarea rows="2" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400 resize-none">Tests honnêtes, gadgets coups de cœur et bons plans tech.</textarea>
+          </div>
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Email de contact</label>
+            <input type="email" placeholder="contact@bytepulse.fr" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+          <h3 class="font-semibold text-gray-800">Sécurité</h3>
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Mot de passe admin actuel</label>
+            <input type="password" placeholder="••••••••" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
+          </div>
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Nouveau mot de passe</label>
+            <input type="password" placeholder="••••••••" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
+          </div>
+          <p class="text-xs text-gray-400">Le mot de passe est défini dans le fichier <code class="bg-gray-100 px-1 rounded">index.html</code> — variable <code class="bg-gray-100 px-1 rounded">ADMIN_PASSWORD</code>.</p>
+        </div>
+
+        <button class="w-full px-4 py-2.5 rounded-xl bg-gray-900 text-white font-medium text-sm hover:bg-gray-700 transition-colors">
+          Enregistrer les modifications
+        </button>
+      </div>
+    </div>
+
+  </div><!-- fin flex-1 main -->
 
 </div>
 
@@ -467,10 +600,123 @@
   const db = createClient(SUPABASE_URL, SUPABASE_ANON);
   // ============================================================
 
-  // --- Sidebar active state ---
-  function setActive(el) {
+  // --- Navigation entre les vues ---
+  const VIEW_META = {
+    dashboard: { section: 'Général',  page: 'Tableau de bord' },
+    articles:  { section: 'Contenu',  page: 'Tous les articles' },
+    editor:    { section: 'Contenu',  page: 'Nouvel article' },
+    medias:    { section: 'Contenu',  page: 'Médias' },
+    settings:  { section: 'Système',  page: 'Paramètres' },
+  };
+
+  function showView(name) {
+    // Masquer toutes les vues
+    ['dashboard','articles','editor','medias','settings'].forEach(v => {
+      const el = document.getElementById('view-' + v);
+      if (el) el.classList.add('hidden');
+    });
+    // Afficher la vue cible
+    const target = document.getElementById('view-' + name);
+    if (target) target.classList.remove('hidden');
+
+    // Mettre à jour le breadcrumb
+    const meta = VIEW_META[name] || {};
+    document.getElementById('breadcrumb-section').textContent = meta.section || '';
+    document.getElementById('breadcrumb-page').textContent   = meta.page || '';
+
+    // Mettre à jour la nav active
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    el.classList.add('active');
+    const navItems = document.querySelectorAll('.nav-item');
+    const order = ['dashboard','articles','editor','medias','settings'];
+    const idx = order.indexOf(name);
+    if (navItems[idx]) navItems[idx].classList.add('active');
+
+    // Charger les données de la vue si nécessaire
+    if (name === 'dashboard') loadDashboard();
+    if (name === 'articles')  loadArticlesTable();
+  }
+
+  // --- Dashboard : chargement stats + liste récente ---
+  async function loadDashboard() {
+    const { data: all } = await db.from('articles').select('statut, categorie');
+    if (!all) return;
+    const published = all.filter(a => a.statut === 'publié').length;
+    const drafts    = all.filter(a => a.statut === 'brouillon').length;
+    const cats      = new Set(all.map(a => a.categorie).filter(Boolean)).size;
+    document.getElementById('stat-published').textContent = published;
+    document.getElementById('stat-drafts').textContent    = drafts;
+    document.getElementById('stat-cats').textContent      = cats;
+
+    const { data: recent } = await db.from('articles')
+      .select('id, titre, statut, categorie, date_creation')
+      .order('date_creation', { ascending: false }).limit(5);
+
+    const container = document.getElementById('dashboard-articles');
+    if (!recent || !recent.length) {
+      container.innerHTML = '<p class="px-6 py-8 text-sm text-gray-400 text-center">Aucun article pour l\'instant.</p>';
+      return;
+    }
+    container.innerHTML = recent.map(a => `
+      <div class="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors">
+        <div class="min-w-0">
+          <p class="text-sm font-medium text-gray-800 truncate">${a.titre}</p>
+          <p class="text-xs text-gray-400">${a.categorie || '—'} · ${new Date(a.date_creation).toLocaleDateString('fr-FR')}</p>
+        </div>
+        <span class="ml-4 shrink-0 px-2 py-0.5 rounded-full text-xs font-semibold ${a.statut === 'publié' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+          ${a.statut}
+        </span>
+      </div>`).join('');
+  }
+
+  // --- Tableau tous les articles ---
+  async function loadArticlesTable() {
+    const tbody = document.getElementById('articles-table-body');
+    const { data, error } = await db.from('articles')
+      .select('id, titre, categorie, statut, date_creation')
+      .order('date_creation', { ascending: false });
+
+    if (error || !data || !data.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">Aucun article.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(a => `
+      <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+        <td class="px-6 py-3 text-sm font-medium text-gray-800 max-w-xs truncate">${a.titre}</td>
+        <td class="px-4 py-3 text-xs text-gray-500 hidden sm:table-cell">${a.categorie || '—'}</td>
+        <td class="px-4 py-3 text-xs text-gray-400 hidden md:table-cell">${new Date(a.date_creation).toLocaleDateString('fr-FR')}</td>
+        <td class="px-4 py-3">
+          <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${a.statut === 'publié' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+            ${a.statut}
+          </span>
+        </td>
+        <td class="px-4 py-3 text-right">
+          <button onclick="deleteArticle('${a.id}')" class="text-xs text-red-400 hover:text-red-600 transition-colors">Supprimer</button>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function deleteArticle(id) {
+    if (!confirm('Supprimer cet article définitivement ?')) return;
+    const { error } = await db.from('articles').delete().eq('id', id);
+    if (error) { showToast('Erreur : ' + error.message, false); return; }
+    showToast('Article supprimé');
+    loadArticlesTable();
+    loadDashboard();
+  }
+
+  // --- Import médias (aperçu local) ---
+  function importMedias(input) {
+    const grid = document.getElementById('media-grid');
+    Array.from(input.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const div = document.createElement('div');
+        div.className = 'aspect-square rounded-2xl overflow-hidden bg-gray-100';
+        div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover" alt="${file.name}" />`;
+        grid.insertBefore(div, grid.firstChild);
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   // --- Toolbar format ---
@@ -690,6 +936,9 @@
   // --- Init default tags ---
   ['UGC', 'Test produit'].forEach(t => tags.push(t));
   renderTags();
+
+  // --- Vue initiale ---
+  showView('dashboard');
 
 </script>
 
