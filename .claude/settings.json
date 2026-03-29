@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"/Users/marius0910/Documents/Claude code\" && git add -A && git diff --cached --quiet || git commit -m \"Auto-save: $(date '+%Y-%m-%d %H:%M')\" && git push origin main 2>/dev/null || true",
+            "statusMessage": "Sauvegarde GitHub..."
+          }
+        ]
+      }
+    ]
+  }
+}
