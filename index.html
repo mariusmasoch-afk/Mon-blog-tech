@@ -25,6 +25,9 @@
   -->
 
   <!-- Tailwind CSS via CDN -->
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -241,139 +244,13 @@
         </a>
       </div>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Les cartes sont injectées dynamiquement par le script Supabase -->
+      <div id="articles-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <!-- Card 1 -->
-        <article class="article-card flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-          <div class="h-44 bg-gradient-to-br from-violet-50 to-purple-100 flex items-center justify-center">
-            <span class="text-4xl select-none" aria-hidden="true">⌚</span>
-          </div>
-          <div class="flex flex-col flex-1 p-5 space-y-3">
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded-full bg-violet-100 text-violet-700 text-xs font-semibold">Gadgets</span>
-              <span class="text-gray-400 text-xs">26 mars 2026 · 5 min</span>
-            </div>
-            <h3 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
-              <a href="#">Apple Watch Ultra 3 vs Galaxy Watch 7 : laquelle mérite votre poignet ?</a>
-            </h3>
-            <p class="text-sm text-gray-500 leading-relaxed flex-1">
-              Deux mois de port alterné, GPS, suivi du sommeil et durée de vie de la batterie : notre comparatif sans concession.
-            </p>
-            <a href="#" class="inline-flex items-center text-sm font-medium text-brand-600 hover:gap-2 transition-all gap-1">
-              Lire <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Card 2 -->
-        <article class="article-card flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-          <div class="h-44 bg-gradient-to-br from-amber-50 to-orange-100 flex items-center justify-center">
-            <span class="text-4xl select-none" aria-hidden="true">🎒</span>
-          </div>
-          <div class="flex flex-col flex-1 p-5 space-y-3">
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">Setup &amp; Télétravail</span>
-              <span class="text-gray-400 text-xs">24 mars 2026 · 7 min</span>
-            </div>
-            <h3 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
-              <a href="#">Nomatic Navigator 15L : le sac à dos tech que l'on attendait</a>
-            </h3>
-            <p class="text-sm text-gray-500 leading-relaxed flex-1">
-              Rangement laptop, port USB-C intégré, imperméabilité et confort en déplacement — on l'a trimballé partout pendant un mois.
-            </p>
-            <a href="#" class="inline-flex items-center text-sm font-medium text-brand-600 hover:gap-2 transition-all gap-1">
-              Lire <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Card 3 -->
-        <article class="article-card flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-          <div class="h-44 bg-gradient-to-br from-emerald-50 to-teal-100 flex items-center justify-center">
-            <span class="text-4xl select-none" aria-hidden="true">🖥️</span>
-          </div>
-          <div class="flex flex-col flex-1 p-5 space-y-3">
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">Setup &amp; Télétravail</span>
-              <span class="text-gray-400 text-xs">22 mars 2026 · 4 min</span>
-            </div>
-            <h3 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
-              <a href="#">Mon setup télétravail 2026 : les 7 produits qui ont tout changé</a>
-            </h3>
-            <p class="text-sm text-gray-500 leading-relaxed flex-1">
-              Moniteur ultrawide, bras articulé, clavier mécanique silencieux… le guide concret pour créer un espace de travail qui booste votre concentration.
-            </p>
-            <a href="#" class="inline-flex items-center text-sm font-medium text-brand-600 hover:gap-2 transition-all gap-1">
-              Lire <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Card 4 -->
-        <article class="article-card flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-          <div class="h-44 bg-gradient-to-br from-sky-50 to-cyan-100 flex items-center justify-center">
-            <span class="text-4xl select-none" aria-hidden="true">📱</span>
-          </div>
-          <div class="flex flex-col flex-1 p-5 space-y-3">
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-700 text-xs font-semibold">Tests &amp; Avis</span>
-              <span class="text-gray-400 text-xs">20 mars 2026 · 6 min</span>
-            </div>
-            <h3 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
-              <a href="#">MagSafe vs chargeurs tiers : lequel charge vraiment plus vite ?</a>
-            </h3>
-            <p class="text-sm text-gray-500 leading-relaxed flex-1">
-              On a mesuré la vitesse de charge de 8 accessoires iPhone pour démêler le vrai du marketing. Les résultats sont surprenants.
-            </p>
-            <a href="#" class="inline-flex items-center text-sm font-medium text-brand-600 hover:gap-2 transition-all gap-1">
-              Lire <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Card 5 -->
-        <article class="article-card flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-          <div class="h-44 bg-gradient-to-br from-rose-50 to-pink-100 flex items-center justify-center">
-            <span class="text-4xl select-none" aria-hidden="true">💡</span>
-          </div>
-          <div class="flex flex-col flex-1 p-5 space-y-3">
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 text-xs font-semibold">Logiciels</span>
-              <span class="text-gray-400 text-xs">18 mars 2026 · 5 min</span>
-            </div>
-            <h3 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
-              <a href="#">Notion vs Obsidian : quelle app de notes pour les non-geeks ?</a>
-            </h3>
-            <p class="text-sm text-gray-500 leading-relaxed flex-1">
-              Prise de notes, gestion de projets, courbe d'apprentissage : on a testé les deux pendant 30 jours pour vous aider à choisir.
-            </p>
-            <a href="#" class="inline-flex items-center text-sm font-medium text-brand-600 hover:gap-2 transition-all gap-1">
-              Lire <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Card 6 -->
-        <article class="article-card flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-          <div class="h-44 bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center">
-            <span class="text-4xl select-none" aria-hidden="true">🏷️</span>
-          </div>
-          <div class="flex flex-col flex-1 p-5 space-y-3">
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold">Bons Plans</span>
-              <span class="text-gray-400 text-xs">15 mars 2026 · 3 min</span>
-            </div>
-            <h3 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
-              <a href="#">5 gadgets à moins de 50 € qui valent vraiment le coup ce mois-ci</a>
-            </h3>
-            <p class="text-sm text-gray-500 leading-relaxed flex-1">
-              Lampe de bureau LED, tracker Bluetooth, hub USB-C compact… notre sélection de petits accessoires au meilleur rapport qualité-prix.
-            </p>
-            <a href="#" class="inline-flex items-center text-sm font-medium text-brand-600 hover:gap-2 transition-all gap-1">
-              Lire <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </article>
+        <!-- Squelettes de chargement -->
+        <div class="skeleton-card rounded-2xl bg-gray-100 animate-pulse h-72"></div>
+        <div class="skeleton-card rounded-2xl bg-gray-100 animate-pulse h-72"></div>
+        <div class="skeleton-card rounded-2xl bg-gray-100 animate-pulse h-72"></div>
 
       </div>
     </section>
@@ -485,6 +362,99 @@
   <!-- ============================================================
     SCRIPTS UI (recherche + menu mobile)
   =============================================================== -->
+  <script>
+  // ============================================================
+  // SUPABASE — Colle ici tes identifiants (Project Settings > API)
+  // ============================================================
+  const SUPABASE_URL  = 'https://yrgylnmhqcimwgmjponj.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable__SdwJpIWNVfPfVNX7eFc-w_mQA8av6H';
+
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+  // ============================================================
+
+  // Couleurs par catégorie
+  const CAT_STYLES = {
+    'tests':      { bg: 'from-sky-50 to-cyan-100',      tag: 'bg-sky-100 text-sky-700' },
+    'gadgets':    { bg: 'from-violet-50 to-purple-100',  tag: 'bg-violet-100 text-violet-700' },
+    'setup':      { bg: 'from-emerald-50 to-teal-100',   tag: 'bg-emerald-100 text-emerald-700' },
+    'logiciels':  { bg: 'from-rose-50 to-pink-100',      tag: 'bg-rose-100 text-rose-700' },
+    'bons-plans': { bg: 'from-indigo-50 to-blue-100',    tag: 'bg-indigo-100 text-indigo-700' },
+  };
+  const CAT_LABELS = {
+    'tests': 'Tests & Avis', 'gadgets': 'Gadgets',
+    'setup': 'Setup & Télétravail', 'logiciels': 'Logiciels', 'bons-plans': 'Bons Plans',
+  };
+
+  function formatDate(iso) {
+    return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function buildCard(article) {
+    const style  = CAT_STYLES[article.categorie] || CAT_STYLES['gadgets'];
+    const label  = CAT_LABELS[article.categorie] || article.categorie;
+    const date   = formatDate(article.date_creation);
+    const mins   = article.temps_lecture ? `${article.temps_lecture} min` : '';
+    const meta   = [date, mins].filter(Boolean).join(' · ');
+
+    const image  = article.image_url
+      ? `<img src="${article.image_url}" alt="${article.titre}" class="w-full h-44 object-cover" />`
+      : `<div class="h-44 bg-gradient-to-br ${style.bg} flex items-center justify-center">
+           <svg class="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
+             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+           </svg>
+         </div>`;
+
+    return `
+      <article class="article-card flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+        ${image}
+        <div class="flex flex-col flex-1 p-5 space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded-full ${style.tag} text-xs font-semibold">${label}</span>
+            <span class="text-gray-400 text-xs">${meta}</span>
+          </div>
+          <h3 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
+            <a href="article.html?slug=${article.slug || article.id}">${article.titre}</a>
+          </h3>
+          <p class="text-sm text-gray-500 leading-relaxed flex-1">${article.extrait || ''}</p>
+          <a href="article.html?slug=${article.slug || article.id}"
+             class="inline-flex items-center text-sm font-medium text-brand-600 gap-1">
+            Lire <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>`;
+  }
+
+  async function loadArticles() {
+    const grid = document.getElementById('articles-grid');
+    const { data, error } = await db
+      .from('articles')
+      .select('id, titre, extrait, categorie, image_url, slug, temps_lecture, date_creation')
+      .eq('statut', 'publié')
+      .order('date_creation', { ascending: false })
+      .limit(6);
+
+    if (error) {
+      console.error('Supabase error:', error.message);
+      grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-12">
+        Impossible de charger les articles. Vérifiez vos clés Supabase.
+      </p>`;
+      return;
+    }
+
+    if (!data.length) {
+      grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-12">
+        Aucun article publié pour l'instant.
+      </p>`;
+      return;
+    }
+
+    grid.innerHTML = data.map(buildCard).join('');
+  }
+
+  loadArticles();
+  </script>
+
   <script>
     // --- Search overlay ---
     const overlay = document.getElementById('search-overlay');

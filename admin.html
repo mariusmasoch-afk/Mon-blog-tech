@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BytePulse — Administration</title>
 
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -454,6 +457,16 @@
 =============================================================== -->
 <script>
 
+  // ============================================================
+  // SUPABASE — Colle ici tes identifiants (Project Settings > API)
+  // ============================================================
+  const SUPABASE_URL  = 'https://yrgylnmhqcimwgmjponj.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable__SdwJpIWNVfPfVNX7eFc-w_mQA8av6H';
+
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+  // ============================================================
+
   // --- Sidebar active state ---
   function setActive(el) {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -627,18 +640,48 @@
     }, 3000);
   }
 
+  // --- Collecte les données du formulaire ---
+  function collectFormData(statut) {
+    return {
+      titre:        document.getElementById('title-input').innerText.trim(),
+      extrait:      document.getElementById('excerpt-input').innerText.trim(),
+      contenu:      document.getElementById('editor-body').innerHTML.trim(),
+      slug:         document.getElementById('slug-input').value.trim(),
+      meta_desc:    document.getElementById('meta-desc').value.trim(),
+      categorie:    document.querySelector('select').value,
+      tags:         [...tags],
+      image_url:    document.getElementById('cover-preview').src || null,
+      statut,       // 'brouillon' ou 'publié'
+      temps_lecture: parseInt(document.getElementById('read-time').textContent) || null,
+    };
+  }
+
   // --- Draft & Publish ---
-  function saveDraft() {
-    const title = document.getElementById('title-input').innerText.trim();
-    if (!title) { showToast('Ajoutez un titre avant de sauvegarder.', false); return; }
+  async function saveDraft() {
+    const data = collectFormData('brouillon');
+    if (!data.titre) { showToast('Ajoutez un titre avant de sauvegarder.', false); return; }
+
+    const { error } = await db.from('articles').insert([data]);
+    if (error) {
+      console.error(error);
+      showToast('Erreur : ' + error.message, false);
+      return;
+    }
     document.getElementById('save-status').innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Brouillon sauvegardé';
     showToast('Brouillon enregistré avec succès');
   }
 
-  function publishArticle() {
-    const title = document.getElementById('title-input').innerText.trim();
-    if (!title) { showToast('Ajoutez un titre avant de publier.', false); return; }
+  async function publishArticle() {
+    const data = collectFormData('publié');
+    if (!data.titre) { showToast('Ajoutez un titre avant de publier.', false); return; }
+
+    const { error } = await db.from('articles').insert([data]);
+    if (error) {
+      console.error(error);
+      showToast('Erreur : ' + error.message, false);
+      return;
+    }
     document.getElementById('save-status').innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span> Publié';
     showToast('Article publié avec succès !');
