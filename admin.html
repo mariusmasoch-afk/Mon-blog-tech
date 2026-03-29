@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BytePulse — Administration</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50:  '#f0f9ff',
+              100: '#e0f2fe',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+            },
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Editor toolbar buttons */
+    .toolbar-btn {
+      @apply p-1.5 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-800 transition-colors text-sm font-medium;
+    }
+    /* Sidebar nav link */
+    .nav-item {
+      @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-pointer;
+    }
+    .nav-item.active {
+      @apply bg-brand-50 text-brand-700;
+    }
+    /* Template card */
+    .template-card {
+      @apply flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 border-gray-200 cursor-pointer hover:border-brand-400 transition-colors text-center;
+    }
+    .template-card.selected {
+      @apply border-brand-500 bg-brand-50;
+    }
+    /* Tag pill */
+    .tag-pill {
+      @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-medium;
+    }
+    /* Drop zone */
+    #drop-zone.drag-over {
+      @apply border-brand-500 bg-brand-50;
+    }
+    /* Word count fade */
+    #word-count { transition: opacity .3s; }
+    /* Editable area */
+    #editor-body:empty::before {
+      content: attr(data-placeholder);
+      color: #9ca3af;
+      pointer-events: none;
+    }
+    #editor-body:focus { outline: none; }
+    #title-input:focus { outline: none; }
+  </style>
+</head>
+
+<body class="h-full bg-gray-50 font-sans antialiased">
+<div class="flex h-screen overflow-hidden">
+
+  <!-- ============================================================
+    SIDEBAR
+  =============================================================== -->
+  <aside class="w-56 shrink-0 bg-white border-r border-gray-100 flex flex-col h-full">
+
+    <!-- Logo -->
+    <div class="h-16 flex items-center px-5 border-b border-gray-100 shrink-0">
+      <a href="index.html" class="font-mono font-medium text-lg tracking-tight text-gray-900">
+        Byte<span class="text-brand-500">Pulse</span>
+      </a>
+      <span class="ml-2 text-xs font-semibold px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">Admin</span>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+
+      <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">Général</p>
+
+      <div class="nav-item" onclick="setActive(this)">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6"/>
+        </svg>
+        Tableau de bord
+      </div>
+
+      <p class="px-3 pt-4 mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">Contenu</p>
+
+      <div class="nav-item" onclick="setActive(this)">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        Tous les articles
+      </div>
+
+      <div class="nav-item active" onclick="setActive(this)">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
+        Nouvel article
+      </div>
+
+      <div class="nav-item" onclick="setActive(this)">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        Médias
+      </div>
+
+      <p class="px-3 pt-4 mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">Système</p>
+
+      <div class="nav-item" onclick="setActive(this)">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        Paramètres
+      </div>
+    </nav>
+
+    <!-- User footer -->
+    <div class="px-3 py-4 border-t border-gray-100 shrink-0">
+      <div class="flex items-center gap-3 px-2">
+        <img src="https://i.pravatar.cc/32?img=3" alt="Avatar" class="w-8 h-8 rounded-full shrink-0" />
+        <div class="min-w-0">
+          <p class="text-sm font-medium text-gray-800 truncate">Sophie M.</p>
+          <p class="text-xs text-gray-400 truncate">Administratrice</p>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ============================================================
+    MAIN CONTENT
+  =============================================================== -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- Top bar -->
+    <header class="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 shrink-0">
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-gray-400">Contenu</span>
+        <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-sm font-medium text-gray-700">Nouvel article</span>
+      </div>
+      <div class="flex items-center gap-2 text-sm text-gray-400">
+        <span id="save-status" class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
+          Non sauvegardé
+        </span>
+      </div>
+    </header>
+
+    <!-- Editor + Right panel -->
+    <div class="flex-1 flex overflow-hidden">
+
+      <!-- ---- EDITOR ---- -->
+      <main class="flex-1 overflow-y-auto bg-white">
+        <div class="max-w-3xl mx-auto px-8 py-10">
+
+          <!-- Toolbar WYSIWYG -->
+          <div class="flex flex-wrap items-center gap-0.5 mb-6 pb-4 border-b border-gray-100">
+
+            <!-- Historique -->
+            <button class="toolbar-btn" title="Annuler" onclick="document.execCommand('undo')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+            </button>
+            <button class="toolbar-btn" title="Rétablir" onclick="document.execCommand('redo')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 10H11a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"/></svg>
+            </button>
+
+            <div class="w-px h-5 bg-gray-200 mx-1"></div>
+
+            <!-- Titres -->
+            <select onchange="applyFormat(this)" class="text-xs text-gray-600 border border-gray-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-brand-400 bg-white">
+              <option value="p">Paragraphe</option>
+              <option value="h2">Titre H2</option>
+              <option value="h3">Titre H3</option>
+              <option value="h4">Titre H4</option>
+              <option value="blockquote">Citation</option>
+            </select>
+
+            <div class="w-px h-5 bg-gray-200 mx-1"></div>
+
+            <!-- Style texte -->
+            <button class="toolbar-btn font-bold" title="Gras" onclick="document.execCommand('bold')">B</button>
+            <button class="toolbar-btn italic" title="Italique" onclick="document.execCommand('italic')">I</button>
+            <button class="toolbar-btn underline" title="Souligné" onclick="document.execCommand('underline')">U</button>
+            <button class="toolbar-btn line-through text-gray-400" title="Barré" onclick="document.execCommand('strikeThrough')">S</button>
+
+            <div class="w-px h-5 bg-gray-200 mx-1"></div>
+
+            <!-- Listes -->
+            <button class="toolbar-btn" title="Liste à puces" onclick="document.execCommand('insertUnorderedList')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/><circle cx="2" cy="6" r="1" fill="currentColor"/><circle cx="2" cy="12" r="1" fill="currentColor"/><circle cx="2" cy="18" r="1" fill="currentColor"/></svg>
+            </button>
+            <button class="toolbar-btn" title="Liste numérotée" onclick="document.execCommand('insertOrderedList')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+            </button>
+
+            <div class="w-px h-5 bg-gray-200 mx-1"></div>
+
+            <!-- Lien -->
+            <button class="toolbar-btn" title="Insérer un lien" onclick="insertLink()">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+            </button>
+
+            <!-- Image inline -->
+            <button class="toolbar-btn" title="Insérer une image" onclick="document.getElementById('inline-img-input').click()">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </button>
+            <input id="inline-img-input" type="file" accept="image/*" class="hidden" onchange="insertInlineImage(this)" />
+
+            <div class="w-px h-5 bg-gray-200 mx-1"></div>
+
+            <!-- Note produit -->
+            <button class="toolbar-btn text-amber-500" title="Insérer un bloc notation produit" onclick="insertRatingBlock()">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+
+            <!-- Séparateur -->
+            <button class="toolbar-btn" title="Insérer un séparateur" onclick="insertHR()">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
+            </button>
+
+            <!-- Compteur -->
+            <div class="ml-auto text-xs text-gray-400" id="word-count">0 mot</div>
+          </div>
+
+          <!-- Titre -->
+          <div
+            id="title-input"
+            contenteditable="true"
+            data-placeholder="Titre de l'article…"
+            class="text-3xl font-bold text-gray-900 leading-tight mb-6 empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300 focus:outline-none"
+            style="min-height:2.5rem"
+            oninput="updateSaveStatus()"
+          ></div>
+
+          <!-- Extrait -->
+          <div
+            id="excerpt-input"
+            contenteditable="true"
+            data-placeholder="Ajoutez un court extrait visible dans la grille d'articles…"
+            class="text-base text-gray-400 italic mb-8 pb-8 border-b border-dashed border-gray-200 empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300 focus:outline-none leading-relaxed"
+            style="min-height:1.5rem"
+            oninput="updateSaveStatus()"
+          ></div>
+
+          <!-- Corps de l'article -->
+          <div
+            id="editor-body"
+            contenteditable="true"
+            data-placeholder="Commencez à rédiger votre article ici…&#10;&#10;Conseil : utilisez la barre d'outils pour structurer votre contenu avec des titres, des listes ou des blocs de notation produit."
+            class="prose prose-gray max-w-none text-base text-gray-700 leading-relaxed focus:outline-none"
+            style="min-height: 400px; white-space: pre-wrap;"
+            oninput="updateWordCount(); updateSaveStatus()"
+          ></div>
+
+        </div>
+      </main>
+
+      <!-- ---- RIGHT PANEL ---- -->
+      <aside class="w-72 shrink-0 bg-gray-50 border-l border-gray-100 overflow-y-auto flex flex-col">
+        <div class="p-5 space-y-6">
+
+          <!-- Boutons d'action -->
+          <div class="space-y-2 pt-1">
+            <button onclick="publishArticle()"
+              class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gray-900 text-white font-semibold text-sm hover:bg-gray-700 transition-colors shadow-sm">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+              </svg>
+              Publier
+            </button>
+            <button onclick="saveDraft()"
+              class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 text-gray-600 font-medium text-sm hover:bg-gray-50 transition-colors">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+              </svg>
+              Enregistrer le brouillon
+            </button>
+          </div>
+
+          <!-- Séparateur -->
+          <hr class="border-gray-200" />
+
+          <!-- Template de disposition -->
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Disposition</h3>
+            <div class="grid grid-cols-3 gap-2">
+
+              <div class="template-card selected" onclick="selectTemplate(this, 'classic')" title="Article classique">
+                <svg class="w-6 h-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M7 4h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"/>
+                </svg>
+                <span class="text-xs text-gray-600 leading-tight">Classique</span>
+              </div>
+
+              <div class="template-card" onclick="selectTemplate(this, 'product')" title="Test produit avec notation">
+                <svg class="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                </svg>
+                <span class="text-xs text-gray-600 leading-tight">Test produit</span>
+              </div>
+
+              <div class="template-card" onclick="selectTemplate(this, 'comparatif')" title="Comparatif 2 produits">
+                <svg class="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/>
+                </svg>
+                <span class="text-xs text-gray-600 leading-tight">Comparatif</span>
+              </div>
+
+            </div>
+            <p id="template-desc" class="mt-2 text-xs text-gray-400">Article long format avec image de couverture et chapô.</p>
+          </div>
+
+          <!-- Séparateur -->
+          <hr class="border-gray-200" />
+
+          <!-- Image de couverture -->
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Image de couverture</h3>
+            <div
+              id="drop-zone"
+              class="relative border-2 border-dashed border-gray-200 rounded-xl p-5 text-center cursor-pointer hover:border-brand-400 hover:bg-brand-50 transition-colors"
+              onclick="document.getElementById('cover-input').click()"
+              ondragover="handleDragOver(event)"
+              ondragleave="handleDragLeave(event)"
+              ondrop="handleDrop(event)"
+            >
+              <img id="cover-preview" src="" alt="" class="hidden w-full h-32 object-cover rounded-lg mb-3" />
+              <div id="drop-placeholder">
+                <svg class="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <p class="text-xs font-medium text-gray-500">Glisser une image ici</p>
+                <p class="text-xs text-gray-400 mt-0.5">ou cliquer pour parcourir</p>
+                <p class="text-xs text-gray-300 mt-1">PNG, JPG · max 5 Mo</p>
+              </div>
+              <input id="cover-input" type="file" accept="image/*" class="hidden" onchange="previewCover(this)" />
+            </div>
+            <button id="remove-cover-btn" onclick="removeCover()" class="hidden mt-2 text-xs text-red-400 hover:text-red-600 transition-colors w-full text-center">
+              Supprimer l'image
+            </button>
+          </div>
+
+          <!-- Séparateur -->
+          <hr class="border-gray-200" />
+
+          <!-- Catégorie -->
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Catégorie</h3>
+            <select class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-400 transition">
+              <option value="">Choisir une catégorie…</option>
+              <option value="tests">Tests &amp; Avis</option>
+              <option value="gadgets">Gadgets</option>
+              <option value="setup">Setup &amp; Télétravail</option>
+              <option value="logiciels">Logiciels</option>
+              <option value="bons-plans">Bons Plans</option>
+            </select>
+          </div>
+
+          <!-- Tags -->
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Tags</h3>
+            <div id="tags-container" class="flex flex-wrap gap-1.5 mb-2">
+              <!-- tags injectés par JS -->
+            </div>
+            <div class="flex gap-2">
+              <input
+                id="tag-input"
+                type="text"
+                placeholder="Ajouter un tag…"
+                class="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-400 transition"
+                onkeydown="handleTagInput(event)"
+              />
+              <button onclick="addTag()" class="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm transition-colors font-medium">
+                +
+              </button>
+            </div>
+            <p class="text-xs text-gray-400 mt-1.5">Entrée ou virgule pour valider</p>
+          </div>
+
+          <!-- Séparateur -->
+          <hr class="border-gray-200" />
+
+          <!-- SEO -->
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">SEO</h3>
+            <div class="space-y-2">
+              <div>
+                <label class="text-xs text-gray-500 mb-1 block">Slug URL</label>
+                <input id="slug-input" type="text" placeholder="mon-article-test-produit"
+                  class="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white font-mono text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400 transition" />
+              </div>
+              <div>
+                <label class="text-xs text-gray-500 mb-1 block">Meta description <span id="meta-count" class="text-gray-300">(0/160)</span></label>
+                <textarea id="meta-desc" rows="3" placeholder="Résumé affiché dans les résultats Google…"
+                  class="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400 transition resize-none leading-relaxed"
+                  oninput="updateMetaCount()"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Séparateur -->
+          <hr class="border-gray-200" />
+
+          <!-- Temps de lecture estimé -->
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-widest text-gray-400">Temps de lecture</span>
+            <span id="read-time" class="text-xs font-medium text-gray-600 bg-white border border-gray-200 px-2 py-1 rounded-full">— min</span>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================
+  TOAST NOTIFICATION
+=============================================================== -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 translate-y-2">
+  <div class="flex items-center gap-3 bg-gray-900 text-white text-sm font-medium px-5 py-3 rounded-2xl shadow-xl">
+    <svg id="toast-icon" class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+    </svg>
+    <span id="toast-msg">Sauvegardé</span>
+  </div>
+</div>
+
+<!-- ============================================================
+  SCRIPTS
+=============================================================== -->
+<script>
+
+  // --- Sidebar active state ---
+  function setActive(el) {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // --- Toolbar format ---
+  function applyFormat(select) {
+    document.execCommand('formatBlock', false, select.value);
+    document.getElementById('editor-body').focus();
+    select.value = 'p';
+  }
+
+  function insertLink() {
+    const url = prompt('URL du lien :');
+    if (url) document.execCommand('createLink', false, url);
+  }
+
+  function insertHR() {
+    document.execCommand('insertHTML', false, '<hr class="my-6 border-gray-200" /><p><br></p>');
+  }
+
+  function insertRatingBlock() {
+    const html = `
+      <div contenteditable="false" class="my-4 p-4 rounded-xl border border-amber-200 bg-amber-50 flex items-center gap-4 select-none">
+        <div class="text-3xl font-bold text-amber-500">9.2</div>
+        <div>
+          <div class="flex gap-0.5 text-amber-400 text-lg">★★★★★</div>
+          <div class="text-xs text-gray-500 mt-0.5">Note BytePulse</div>
+        </div>
+        <div class="ml-auto text-xs text-gray-400 italic">Bloc notation produit</div>
+      </div><p><br></p>`;
+    document.execCommand('insertHTML', false, html);
+  }
+
+  function insertInlineImage(input) {
+    if (!input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.execCommand('insertHTML', false,
+        `<img src="${e.target.result}" class="rounded-xl my-4 max-w-full" alt="Image article" /><p><br></p>`);
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  // --- Word count & read time ---
+  function updateWordCount() {
+    const text = document.getElementById('editor-body').innerText.trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    const el = document.getElementById('word-count');
+    el.textContent = words + (words <= 1 ? ' mot' : ' mots');
+    const mins = Math.max(1, Math.round(words / 200));
+    document.getElementById('read-time').textContent = mins + ' min';
+  }
+
+  // --- Save status ---
+  let saveTimer;
+  function updateSaveStatus() {
+    const el = document.getElementById('save-status');
+    el.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Modifications non sauvegardées';
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      el.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span> Non sauvegardé';
+    }, 3000);
+    // Auto-generate slug from title
+    const title = document.getElementById('title-input').innerText.trim();
+    const slug = title.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .slice(0, 60);
+    document.getElementById('slug-input').value = slug;
+  }
+
+  // --- Cover image ---
+  function previewCover(input) {
+    if (!input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => showCoverPreview(e.target.result);
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  function showCoverPreview(src) {
+    const preview = document.getElementById('cover-preview');
+    const placeholder = document.getElementById('drop-placeholder');
+    const removeBtn = document.getElementById('remove-cover-btn');
+    preview.src = src;
+    preview.classList.remove('hidden');
+    placeholder.classList.add('hidden');
+    removeBtn.classList.remove('hidden');
+  }
+
+  function removeCover() {
+    document.getElementById('cover-preview').classList.add('hidden');
+    document.getElementById('cover-preview').src = '';
+    document.getElementById('drop-placeholder').classList.remove('hidden');
+    document.getElementById('remove-cover-btn').classList.add('hidden');
+    document.getElementById('cover-input').value = '';
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    document.getElementById('drop-zone').classList.add('drag-over');
+  }
+  function handleDragLeave() {
+    document.getElementById('drop-zone').classList.remove('drag-over');
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('drop-zone').classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = ev => showCoverPreview(ev.target.result);
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // --- Template selector ---
+  const templateDescriptions = {
+    classic: 'Article long format avec image de couverture et chapô.',
+    product: 'Test produit : note globale, tableau points forts/faibles, verdict final.',
+    comparatif: 'Comparatif deux produits côte à côte avec tableau récapitulatif.',
+  };
+  function selectTemplate(el, type) {
+    document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('template-desc').textContent = templateDescriptions[type];
+  }
+
+  // --- Tags ---
+  const tags = [];
+  function renderTags() {
+    const container = document.getElementById('tags-container');
+    container.innerHTML = tags.map((t, i) => `
+      <span class="tag-pill">
+        ${t}
+        <button onclick="removeTag(${i})" class="ml-0.5 text-gray-400 hover:text-red-500 transition-colors leading-none">✕</button>
+      </span>`).join('');
+  }
+  function addTag() {
+    const input = document.getElementById('tag-input');
+    const val = input.value.trim().replace(/,+$/, '');
+    if (val && !tags.includes(val)) { tags.push(val); renderTags(); }
+    input.value = '';
+  }
+  function removeTag(i) { tags.splice(i, 1); renderTags(); }
+  function handleTagInput(e) {
+    if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addTag(); }
+  }
+
+  // --- Meta description counter ---
+  function updateMetaCount() {
+    const len = document.getElementById('meta-desc').value.length;
+    const el = document.getElementById('meta-count');
+    el.textContent = `(${len}/160)`;
+    el.className = len > 160 ? 'text-red-400' : len > 130 ? 'text-amber-400' : 'text-gray-300';
+  }
+
+  // --- Toast ---
+  function showToast(msg, success = true) {
+    const toast = document.getElementById('toast');
+    const icon = document.getElementById('toast-icon');
+    document.getElementById('toast-msg').textContent = msg;
+    icon.className = `w-4 h-4 shrink-0 ${success ? 'text-emerald-400' : 'text-red-400'}`;
+    toast.classList.remove('opacity-0', 'translate-y-2');
+    toast.classList.add('opacity-100', 'translate-y-0');
+    setTimeout(() => {
+      toast.classList.remove('opacity-100', 'translate-y-0');
+      toast.classList.add('opacity-0', 'translate-y-2');
+    }, 3000);
+  }
+
+  // --- Draft & Publish ---
+  function saveDraft() {
+    const title = document.getElementById('title-input').innerText.trim();
+    if (!title) { showToast('Ajoutez un titre avant de sauvegarder.', false); return; }
+    document.getElementById('save-status').innerHTML =
+      '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Brouillon sauvegardé';
+    showToast('Brouillon enregistré avec succès');
+  }
+
+  function publishArticle() {
+    const title = document.getElementById('title-input').innerText.trim();
+    if (!title) { showToast('Ajoutez un titre avant de publier.', false); return; }
+    document.getElementById('save-status').innerHTML =
+      '<span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span> Publié';
+    showToast('Article publié avec succès !');
+  }
+
+  // --- Init default tags ---
+  ['UGC', 'Test produit'].forEach(t => tags.push(t));
+  renderTags();
+
+</script>
+
+</body>
+</html>
