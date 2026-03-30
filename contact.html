@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Contactez l'équipe Nextep — questions, partenariats, UGC sponsorisé."/>
+  <title>Contact — Nextep</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']},colors:{brand:{50:'#f0f9ff',100:'#e0f2fe',400:'#38bdf8',500:'#0ea5e9',600:'#0284c7'}}}}};</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>.nav-link::after{content:'';display:block;height:2px;width:0;background:#0ea5e9;transition:width .25s ease;}.nav-link:hover::after{width:100%;}</style>
+</head>
+<body class="bg-white text-gray-900 font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
+      <a href="index.html" class="font-sans font-bold text-xl tracking-tight text-gray-900">Next<span class="text-brand-500">ep</span></a>
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-gray-600">
+        <a href="categorie.html?cat=tests" class="nav-link hover:text-gray-900">Tests &amp; Avis</a>
+        <a href="categorie.html?cat=gadgets" class="nav-link hover:text-gray-900">Gadgets</a>
+        <a href="categorie.html?cat=setup" class="nav-link hover:text-gray-900">Setup &amp; Télétravail</a>
+        <a href="categorie.html?cat=logiciels" class="nav-link hover:text-gray-900">Logiciels</a>
+        <a href="categorie.html?cat=bons-plans" class="nav-link hover:text-gray-900">Bons Plans</a>
+      </nav>
+      <a href="index.html#newsletter" class="hidden sm:inline-flex px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-700 transition-colors">S'abonner</a>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+
+    <div class="text-center mb-14">
+      <span class="inline-block px-3 py-1 rounded-full bg-brand-100 text-brand-700 text-xs font-semibold uppercase tracking-wide mb-4">Contact</span>
+      <h1 class="text-4xl font-bold tracking-tight text-gray-900 mb-4">On est à votre écoute</h1>
+      <p class="text-lg text-gray-500">Questions, partenariats ou simplement dire bonjour — réponse garantie sous 48h.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-12">
+
+      <!-- Formulaire -->
+      <div>
+        <h2 class="text-lg font-bold text-gray-900 mb-6">Envoyer un message</h2>
+        <form class="space-y-4" onsubmit="handleSubmit(event)">
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Nom complet</label>
+            <input type="text" required placeholder="Votre nom" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 transition"/>
+          </div>
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Email</label>
+            <input type="email" required placeholder="vous@email.com" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 transition"/>
+          </div>
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Sujet</label>
+            <select class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white transition">
+              <option>Question générale</option>
+              <option>Partenariat / UGC sponsorisé</option>
+              <option>Écrire pour Nextep</option>
+              <option>Signaler une erreur</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Message</label>
+            <textarea rows="5" required placeholder="Votre message…" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 resize-none leading-relaxed transition"></textarea>
+          </div>
+          <button type="submit" class="w-full py-3 rounded-xl bg-gray-900 text-white font-semibold text-sm hover:bg-gray-700 transition-colors">Envoyer le message</button>
+          <p id="form-msg" class="text-center text-sm text-emerald-600 hidden">✓ Message envoyé ! On vous répond sous 48h.</p>
+        </form>
+      </div>
+
+      <!-- Infos contact -->
+      <div class="space-y-6">
+        <h2 class="text-lg font-bold text-gray-900">Autres façons de nous joindre</h2>
+
+        <div class="flex gap-4 p-5 rounded-2xl bg-gray-50 border border-gray-100">
+          <div class="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-gray-900">Email général</p>
+            <a href="mailto:contact@nextep-tech.com" class="text-sm text-brand-600 hover:underline">contact@nextep-tech.com</a>
+          </div>
+        </div>
+
+        <div class="flex gap-4 p-5 rounded-2xl bg-gray-50 border border-gray-100">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-gray-900">Partenariats &amp; UGC</p>
+            <a href="mailto:partners@nextep-tech.com" class="text-sm text-brand-600 hover:underline">partners@nextep-tech.com</a>
+            <p class="text-xs text-gray-400 mt-0.5">Tests sponsorisés, contenus de marque, unboxing</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4 p-5 rounded-2xl bg-gray-50 border border-gray-100">
+          <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-violet-600" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-gray-900">Twitter / X</p>
+            <a href="#" class="text-sm text-brand-600 hover:underline">@nextep_tech</a>
+            <p class="text-xs text-gray-400 mt-0.5">Réponse rapide en DM</p>
+          </div>
+        </div>
+
+        <div class="bg-brand-50 border border-brand-100 rounded-2xl p-5">
+          <p class="text-sm font-semibold text-brand-800 mb-1">⏱ Délai de réponse</p>
+          <p class="text-sm text-brand-700">Nous répondons à tous les messages sous <strong>48 heures ouvrées</strong>, du lundi au vendredi.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-gray-950 text-gray-400 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex items-center justify-between text-xs text-gray-600 border-t border-gray-800">
+      <span>© 2026 Nextep. Tous droits réservés.</span>
+      <a href="index.html" class="hover:text-gray-400 transition-colors">← Retour à l'accueil</a>
+    </div>
+  </footer>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      document.getElementById('form-msg').classList.remove('hidden');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
