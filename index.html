@@ -239,17 +239,19 @@
           Les meilleurs produits, sans passer des heures à chercher
         </h2>
         <p class="text-gray-400">
-          Un test honnête et un bon plan chaque semaine, directement dans ta boîte mail. Pas de spam, désinscription en un clic.
+          Reçois un mail dès qu'un nouvel article est publié. Pas de spam, désinscription en un clic.
         </p>
-        <form class="flex flex-col sm:flex-row gap-3 mt-2" novalidate>
+        <form id="newsletter-form" class="flex flex-col sm:flex-row gap-3 mt-2" onsubmit="handleNewsletter(event)">
           <label for="email-input" class="sr-only">Adresse e-mail</label>
           <input id="email-input" type="email" placeholder="ton@email.com" required
             class="flex-1 rounded-xl px-4 py-2.5 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition" />
-          <button type="submit"
+          <button type="submit" id="newsletter-btn"
             class="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-medium text-sm transition-colors whitespace-nowrap">
-            S'abonner gratuitement
+            S'abonner
           </button>
         </form>
+        <p id="newsletter-success" class="hidden text-sm text-emerald-400 font-medium">✓ Inscription confirmée !</p>
+        <p id="newsletter-error" class="hidden text-sm text-red-400">Cette adresse est déjà inscrite ou une erreur est survenue.</p>
         <p class="text-xs text-gray-600">En t'abonnant, tu acceptes notre politique de confidentialité.</p>
       </div>
     </section>
@@ -521,6 +523,28 @@
 
   loadHero();
   loadArticles();
+
+  // --- Newsletter : inscription ---
+  async function handleNewsletter(e) {
+    e.preventDefault();
+    const email = document.getElementById('email-input').value.trim();
+    const btn   = document.getElementById('newsletter-btn');
+    document.getElementById('newsletter-success').classList.add('hidden');
+    document.getElementById('newsletter-error').classList.add('hidden');
+    btn.disabled = true;
+    btn.textContent = '…';
+
+    const { error } = await db.from('abonnes').insert([{ email }]);
+
+    if (error) {
+      document.getElementById('newsletter-error').classList.remove('hidden');
+    } else {
+      document.getElementById('newsletter-form').classList.add('hidden');
+      document.getElementById('newsletter-success').classList.remove('hidden');
+    }
+    btn.disabled = false;
+    btn.textContent = 'S\'abonner';
+  }
   </script>
 
   <script>
