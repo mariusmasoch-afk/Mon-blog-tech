@@ -1227,32 +1227,6 @@
     if (current) sel.value = current;
   }
 
-  // --- Insertion Sony WH-1000XM6 si absent ---
-  async function ensureSonyArticle() {
-    const { data: rows } = await db
-      .from('articles').select('id').eq('slug', 'sony-wh1000xm6').limit(1);
-    if (rows && rows.length > 0) return; // déjà présent
-
-    const { error: insertErr } = await db.from('articles').insert([{
-      titre: 'Sony WH-1000XM6 : le meilleur casque sans fil vaut-il vraiment son prix ?',
-      extrait: 'Réduction de bruit, autonomie de 30 heures, confort sur de longues sessions : on a testé le nouveau flagship de Sony pendant trois semaines pour vous dire l\'essentiel.',
-      categorie: 'tests',
-      image_url: 'hero-sony.jpg',
-      slug: 'sony-wh1000xm6',
-      temps_lecture: 8,
-      statut: 'publié',
-      is_hero: true,
-    }]);
-
-    if (insertErr) {
-      console.error('Erreur insertion Sony:', insertErr.message);
-    } else {
-      console.log('Article Sony inséré avec succès');
-      loadDashboard();
-      loadArticlesTable();
-    }
-  }
-  ensureSonyArticle();
 
   // --- Vue initiale ---
   showView('dashboard');
