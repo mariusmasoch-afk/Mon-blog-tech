@@ -280,6 +280,43 @@
 
             <div class="w-px h-5 bg-gray-200 mx-1"></div>
 
+            <!-- Couleur texte -->
+            <div class="relative group" title="Couleur du texte">
+              <button class="toolbar-btn flex items-center gap-1" onclick="document.getElementById('text-color-input').click()">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10M12 3l5 9H7l5-9z"/></svg>
+                <span id="color-swatch" class="w-3 h-1.5 rounded-sm bg-gray-900 block"></span>
+              </button>
+              <input id="text-color-input" type="color" value="#111827" class="absolute opacity-0 w-0 h-0" onchange="applyColor(this.value)" />
+            </div>
+
+            <div class="w-px h-5 bg-gray-200 mx-1"></div>
+
+            <!-- Alignement -->
+            <button class="toolbar-btn" title="Aligner à gauche" onclick="document.execCommand('justifyLeft')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h12M3 18h15"/></svg>
+            </button>
+            <button class="toolbar-btn" title="Centrer" onclick="document.execCommand('justifyCenter')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M6 12h12M4 18h16"/></svg>
+            </button>
+            <button class="toolbar-btn" title="Aligner à droite" onclick="document.execCommand('justifyRight')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M9 12h12M6 18h15"/></svg>
+            </button>
+            <button class="toolbar-btn" title="Justifier" onclick="document.execCommand('justifyFull')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h18M3 18h18"/></svg>
+            </button>
+
+            <div class="w-px h-5 bg-gray-200 mx-1"></div>
+
+            <!-- Indentation -->
+            <button class="toolbar-btn" title="Diminuer le retrait" onclick="document.execCommand('outdent')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6l-6 6 6 6M21 12H3"/></svg>
+            </button>
+            <button class="toolbar-btn" title="Augmenter le retrait" onclick="document.execCommand('indent')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 6l6 6-6 6M3 12h18"/></svg>
+            </button>
+
+            <div class="w-px h-5 bg-gray-200 mx-1"></div>
+
             <!-- Listes -->
             <button class="toolbar-btn" title="Liste à puces" onclick="document.execCommand('insertUnorderedList')">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/><circle cx="2" cy="6" r="1" fill="currentColor"/><circle cx="2" cy="12" r="1" fill="currentColor"/><circle cx="2" cy="18" r="1" fill="currentColor"/></svg>
@@ -306,6 +343,16 @@
             <!-- Note produit -->
             <button class="toolbar-btn text-amber-500" title="Insérer un bloc notation produit" onclick="insertRatingBlock()">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+
+            <!-- Encadré info -->
+            <button class="toolbar-btn text-brand-500" title="Insérer un encadré info" onclick="insertCallout('info')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z"/></svg>
+            </button>
+
+            <!-- Encadré warning -->
+            <button class="toolbar-btn text-amber-500" title="Insérer un encadré attention" onclick="insertCallout('warning')">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
             </button>
 
             <!-- Séparateur -->
@@ -866,6 +913,31 @@
 
   function insertHR() {
     document.execCommand('insertHTML', false, '<hr class="my-6 border-gray-200" /><p><br></p>');
+  }
+
+  function applyColor(color) {
+    document.execCommand('foreColor', false, color);
+    document.getElementById('color-swatch').style.background = color;
+    document.getElementById('editor-body').focus();
+  }
+
+  function insertCallout(type) {
+    const styles = {
+      info:    { bg: 'bg-sky-50',    border: 'border-sky-200',   text: 'text-sky-800',   icon: 'ℹ️', label: 'À noter' },
+      warning: { bg: 'bg-amber-50',  border: 'border-amber-200', text: 'text-amber-800', icon: '⚠️', label: 'Attention' },
+    };
+    const s = styles[type];
+    const html = `
+      <div contenteditable="false" class="my-4 p-4 rounded-xl border ${s.border} ${s.bg} select-none">
+        <div class="flex items-start gap-3">
+          <span class="text-lg leading-none mt-0.5">${s.icon}</span>
+          <div>
+            <p class="font-semibold ${s.text} text-sm mb-1">${s.label}</p>
+            <p class="text-sm ${s.text} opacity-80">Cliquez pour modifier ce texte…</p>
+          </div>
+        </div>
+      </div><p><br></p>`;
+    document.execCommand('insertHTML', false, html);
   }
 
   function insertRatingBlock() {
