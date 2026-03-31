@@ -1132,7 +1132,7 @@
       image_url,
       statut,
       temps_lecture: parseInt(document.getElementById('read-time').textContent) || null,
-      redacteur_id:  redacteurVal || null,
+      redacteur_id:  (redacteurVal && redacteurVal.trim().length > 10) ? redacteurVal.trim() : null,
     };
   }
 
