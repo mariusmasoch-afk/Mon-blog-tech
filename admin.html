@@ -763,12 +763,12 @@
   }
 
   async function setHero(id, isCurrentlyHero) {
-    if (isCurrentlyHero) return; // déjà hero, rien à faire
-    // Retirer le hero de tous les articles
+    if (isCurrentlyHero) return;
     await db.from('articles').update({ is_hero: false }).neq('id', '00000000-0000-0000-0000-000000000000');
-    // Définir le nouvel article hero
     const { error } = await db.from('articles').update({ is_hero: true }).eq('id', id);
     if (error) { showToast('Erreur : ' + error.message, false); return; }
+    // Invalider le cache hero sur le site client
+    localStorage.removeItem('tf_hero');
     showToast('⭐ Article défini comme hero du site !');
     loadArticlesTable();
   }

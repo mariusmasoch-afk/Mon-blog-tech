@@ -483,26 +483,37 @@
     // 1. Affichage instantané depuis le cache si disponible
     try {
       const cached = JSON.parse(localStorage.getItem(HERO_CACHE_KEY));
-      if (cached && (Date.now() - cached.ts < HERO_CACHE_TTL)) {
+      if (cached && cached.data && (Date.now() - cached.ts < HERO_CACHE_TTL)) {
         renderHero(cached.data);
+        // Rafraîchissement silencieux en arrière-plan
+        fetchHero(true);
+        return;
       }
     } catch(e) {}
 
-    // 2. Fetch Supabase en arrière-plan (silencieux)
-    const { data: hero } = await db
+    // 2. Pas de cache valide : fetch bloquant
+    await fetchHero(false);
+  }
+
+  async function fetchHero(silent) {
+    const { data: rows, error } = await db
       .from('articles')
-      .select('id, titre, extrait, categorie, image_url, slug, temps_lecture, date_creation, auteur')
+      .select('id, titre, extrait, categorie, image_url, slug, temps_lecture, date_creation')
       .eq('statut', 'publié')
       .eq('is_hero', true)
-      .single();
+      .limit(1);
 
-    if (!hero) return;
+    if (error || !rows || !rows.length) {
+      // Effacer le skeleton si aucun hero défini
+      if (!silent) document.getElementById('hero-grid').innerHTML =
+        '<p class="col-span-2 text-center text-gray-300 py-10 text-sm">Aucun article hero défini.</p>';
+      return;
+    }
 
-    // 3. Mise à jour du cache
-    localStorage.setItem(HERO_CACHE_KEY, JSON.stringify({ data: hero, ts: Date.now() }));
-
-    // 4. Mettre à jour l'affichage (invisible si déjà le même contenu)
-    renderHero(hero);
+    const hero = rows[0];
+    try { localStorage.setItem(HERO_CACHE_KEY, JSON.stringify({ data: hero, ts: Date.now() })); } catch(e) {}
+    if (!silent) renderHero(hero);
+    else renderHero(hero); // toujours mettre à jour même en silencieux
   }
 
   loadHero();
