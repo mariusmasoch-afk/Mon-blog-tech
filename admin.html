@@ -1302,8 +1302,10 @@
             htmlContent,
           }),
         });
-        if (res.ok) sent++; else failed++;
-      } catch { failed++; }
+        const result = await res.json();
+        console.log(`[Newsletter] ${email} →`, res.status, result);
+        if (res.ok) sent++; else { failed++; console.error('Erreur Brevo:', result); }
+      } catch(err) { failed++; console.error('Fetch error:', err); }
     }
 
     document.getElementById('newsletter-prompt').remove();
