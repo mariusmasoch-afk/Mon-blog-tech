@@ -417,6 +417,11 @@
               </svg>
               Enregistrer le brouillon
             </button>
+            <!-- Option newsletter -->
+            <label class="flex items-center gap-2 px-1 pt-1 cursor-pointer select-none">
+              <input type="checkbox" id="send-newsletter-check" checked class="w-3.5 h-3.5 rounded accent-gray-900" />
+              <span class="text-xs text-gray-400">Notifier les abonnés à la publication</span>
+            </label>
           </div>
 
           <!-- Séparateur -->
@@ -1183,7 +1188,8 @@
     document.getElementById('save-status').innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span> Publié';
 
-    showPublishSuccess(data.slug, data.titre, data.extrait, isUpdate);
+    const sendNl = document.getElementById('send-newsletter-check').checked;
+    showPublishSuccess(data.slug, data.titre, data.extrait, isUpdate, sendNl);
 
     if (!isUpdate) {
       // Réinitialiser l'éditeur pour un nouvel article
@@ -1203,7 +1209,7 @@
     VIEW_META.editor.page = 'Nouvel article';
   }
 
-  function showPublishSuccess(slug, titre, extrait, isUpdate) {
+  function showPublishSuccess(slug, titre, extrait, isUpdate, sendNl = true) {
     const articleUrl = `https://tech-flair.com/article.html?slug=${slug}`;
     const toast = document.getElementById('toast');
     document.getElementById('toast-msg').innerHTML = isUpdate
@@ -1217,8 +1223,8 @@
       toast.classList.add('opacity-0', 'translate-y-2');
     }, 6000);
 
-    // Proposer l'envoi newsletter uniquement pour un nouvel article
-    if (!isUpdate) {
+    // Proposer l'envoi newsletter uniquement pour un nouvel article et si la case est cochée
+    if (!isUpdate && sendNl) {
       showNewsletterPrompt(slug, titre, extrait, articleUrl);
     }
   }
