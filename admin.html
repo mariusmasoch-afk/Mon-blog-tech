@@ -674,7 +674,12 @@
       .select('id, titre, categorie, statut, date_creation, is_hero')
       .order('date_creation', { ascending: false });
 
-    if (error || !data || !data.length) {
+    if (error) {
+      console.error('Erreur articles:', error.message);
+      tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-red-400">Erreur : ${error.message}</td></tr>`;
+      return;
+    }
+    if (!data || !data.length) {
       tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">Aucun article.</td></tr>';
       return;
     }
@@ -992,9 +997,12 @@
 
   // --- Insertion Sony WH-1000XM6 si absent ---
   async function ensureSonyArticle() {
-    const { data } = await db.from('articles').select('id').eq('slug', 'sony-wh1000xm6').single();
+    // maybeSingle() ne plante pas si aucun résultat
+    const { data, error: checkErr } = await db
+      .from('articles').select('id').eq('slug', 'sony-wh1000xm6').maybeSingle();
     if (data) return; // déjà présent
-    await db.from('articles').insert([{
+
+    const { error: insertErr } = await db.from('articles').insert([{
       titre: 'Sony WH-1000XM6 : le meilleur casque sans fil vaut-il vraiment son prix ?',
       extrait: 'Réduction de bruit, autonomie de 30 heures, confort sur de longues sessions : on a testé le nouveau flagship de Sony pendant trois semaines pour vous dire l\'essentiel.',
       categorie: 'tests',
@@ -1003,9 +1011,15 @@
       temps_lecture: 8,
       statut: 'publié',
       is_hero: true,
-      auteur: 'Sophie Marchand',
-      meta_desc: 'Test complet du Sony WH-1000XM6 : réduction de bruit, qualité sonore, autonomie 30h. Le meilleur casque sans fil de 2026 vaut-il vraiment 399€ ?',
     }]);
+
+    if (insertErr) {
+      console.error('Erreur insertion Sony:', insertErr.message);
+    } else {
+      console.log('Article Sony inséré avec succès');
+      loadDashboard();
+      loadArticlesTable();
+    }
   }
   ensureSonyArticle();
 
