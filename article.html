@@ -239,9 +239,18 @@
         <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">${a.titre}</h1>
 
         <!-- Métadonnées -->
-        <div class="flex items-center gap-3 text-sm text-gray-400 mb-8 flex-wrap">
+        <div class="flex items-center gap-4 text-sm text-gray-400 mb-8 flex-wrap">
           <span>${date}</span>
           ${mins ? `<span>·</span><span>${mins}</span>` : ''}
+          ${a.redacteurs ? `
+          <span>·</span>
+          <div class="flex items-center gap-2">
+            ${a.redacteurs.photo_url
+              ? `<img src="${a.redacteurs.photo_url}" alt="${a.redacteurs.prenom} ${a.redacteurs.nom}" class="w-6 h-6 rounded-full object-cover border border-gray-200" />`
+              : `<div class="w-6 h-6 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold text-xs shrink-0">${a.redacteurs.prenom[0]}${a.redacteurs.nom[0]}</div>`
+            }
+            <span>par <strong class="text-gray-700">${a.redacteurs.prenom} ${a.redacteurs.nom}</strong></span>
+          </div>` : ''}
         </div>
 
         <!-- Image de couverture -->

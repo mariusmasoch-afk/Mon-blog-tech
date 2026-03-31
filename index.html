@@ -467,9 +467,12 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4-4 4M3 12h18"/>
             </svg>
           </a>
-          ${hero.auteur ? `<div class="flex items-center gap-2">
-            <img src="https://i.pravatar.cc/32?img=3" alt="${hero.auteur}" class="w-8 h-8 rounded-full object-cover" />
-            <span class="text-sm text-gray-500">par <strong class="text-gray-700">${hero.auteur}</strong></span>
+          ${hero.redacteurs ? `<div class="flex items-center gap-2">
+            ${hero.redacteurs.photo_url
+              ? `<img src="${hero.redacteurs.photo_url}" alt="${hero.redacteurs.prenom} ${hero.redacteurs.nom}" class="w-8 h-8 rounded-full object-cover border border-gray-200" />`
+              : `<div class="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold text-xs shrink-0">${hero.redacteurs.prenom[0]}${hero.redacteurs.nom[0]}</div>`
+            }
+            <span class="text-sm text-gray-500">par <strong class="text-gray-700">${hero.redacteurs.prenom} ${hero.redacteurs.nom}</strong></span>
           </div>` : ''}
         </div>
       </div>
@@ -498,7 +501,7 @@
   async function fetchHero(silent) {
     const { data: rows, error } = await db
       .from('articles')
-      .select('id, titre, extrait, categorie, image_url, slug, temps_lecture, date_creation')
+      .select('id, titre, extrait, categorie, image_url, slug, temps_lecture, date_creation, redacteurs(prenom, nom, photo_url)')
       .eq('statut', 'publié')
       .eq('is_hero', true)
       .limit(1);
