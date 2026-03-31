@@ -171,10 +171,10 @@
                 <span class="text-gray-400 text-xs">${[date,mins].filter(Boolean).join(' · ')}</span>
               </div>
               <h2 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
-                <a href="article.html?slug=${a.slug||a.id}">${a.titre}</a>
+                <a href="${a.slug||a.id}.html">${a.titre}</a>
               </h2>
               <p class="text-sm text-gray-500 leading-relaxed flex-1">${a.extrait||''}</p>
-              <a href="article.html?slug=${a.slug||a.id}" class="inline-flex items-center text-sm font-medium text-brand-600 gap-1">Lire <span>→</span></a>
+              <a href="${a.slug||a.id}.html" class="inline-flex items-center text-sm font-medium text-brand-600 gap-1">Lire <span>→</span></a>
             </div>
           </article>`;
       }).join('');
