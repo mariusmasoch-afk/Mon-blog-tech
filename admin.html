@@ -145,17 +145,6 @@
       </div>
     </nav>
 
-    <!-- User footer -->
-    <div class="px-3 py-4 border-t border-gray-100 shrink-0">
-      <div class="flex items-center gap-3 px-2">
-        <img src="https://i.pravatar.cc/32?img=3" alt="Avatar" class="w-8 h-8 rounded-full shrink-0" />
-        <div class="min-w-0">
-          <p class="text-sm font-medium text-gray-800 truncate">Sophie M.</p>
-          <p class="text-xs text-gray-400 truncate">Rédactrice</p>
-        </div>
-      </div>
-    </div>
-
   </aside>
 
   <!-- ============================================================
@@ -1047,6 +1036,7 @@
   async function publishArticle() {
     const data = collectFormData('publié');
     if (!data.titre) { showToast('Ajoutez un titre avant de publier.', false); return; }
+    if (!data.slug)  { showToast('Ajoutez un slug avant de publier.', false); return; }
 
     let error;
     if (currentEditId) {
@@ -1055,11 +1045,47 @@
       ({ error } = await db.from('articles').insert([data]));
     }
     if (error) { showToast('Erreur : ' + error.message, false); return; }
+
+    // Invalider le cache hero/index pour que l'accueil reflète les changements
+    localStorage.removeItem('tf_hero');
+
     document.getElementById('save-status').innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span> Publié';
-    showToast(currentEditId ? 'Article mis à jour !' : 'Article publié avec succès !');
+
+    // Afficher le lien vers l'article publié
+    showPublishSuccess(data.slug, currentEditId !== null);
+
+    if (!currentEditId) {
+      // Réinitialiser l'éditeur pour un nouvel article
+      document.getElementById('title-input').innerText   = '';
+      document.getElementById('excerpt-input').innerText = '';
+      document.getElementById('editor-body').innerHTML   = '';
+      document.getElementById('slug-input').value        = '';
+      document.getElementById('meta-desc').value         = '';
+      document.getElementById('cat-select').value        = '';
+      document.getElementById('redacteur-select').value  = '';
+      removeCover();
+      tags.length = 0;
+      renderTags();
+      updateWordCount();
+    }
     currentEditId = null;
     VIEW_META.editor.page = 'Nouvel article';
+  }
+
+  function showPublishSuccess(slug, isUpdate) {
+    const articleUrl = `https://tech-flair.com/article.html?slug=${slug}`;
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').innerHTML = isUpdate
+      ? `Article mis à jour ! <a href="${articleUrl}" target="_blank" class="underline ml-1">Voir en ligne →</a>`
+      : `Publié avec succès ! <a href="${articleUrl}" target="_blank" class="underline ml-1">Voir en ligne →</a>`;
+    document.getElementById('toast-icon').className = 'w-4 h-4 shrink-0 text-emerald-400';
+    toast.classList.remove('opacity-0', 'translate-y-2');
+    toast.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+    setTimeout(() => {
+      toast.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      toast.classList.add('opacity-0', 'translate-y-2');
+    }, 6000);
   }
 
   // --- Init default tags ---
@@ -1101,8 +1127,8 @@
     }
     grid.innerHTML = data.map(r => {
       const avatar = r.photo_url
-        ? `<img src="${r.photo_url}" alt="${r.prenom} ${r.nom}" class="w-16 h-16 rounded-full object-cover shrink-0 border-2 border-gray-100" />`
-        : `<div class="w-16 h-16 rounded-full bg-brand-100 flex items-center justify-center shrink-0 text-brand-600 font-bold text-xl">${r.prenom[0]}${r.nom[0]}</div>`;
+        ? `<div class="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-gray-100 bg-gray-50"><img src="${r.photo_url}" alt="${r.prenom} ${r.nom}" class="w-full h-full object-cover object-center" /></div>`
+        : `<div class="w-20 h-20 rounded-2xl bg-brand-100 flex items-center justify-center shrink-0 text-brand-600 font-bold text-2xl">${r.prenom[0]}${r.nom[0]}</div>`;
       return `
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-4">
           <div class="flex items-center gap-4">

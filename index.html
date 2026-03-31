@@ -399,10 +399,10 @@
             <span class="text-gray-400 text-xs">${meta}</span>
           </div>
           <h3 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
-            <a href="${article.slug || article.id}.html">${article.titre}</a>
+            <a href="article.html?slug=${article.slug || article.id}">${article.titre}</a>
           </h3>
           <p class="text-sm text-gray-500 leading-relaxed flex-1">${article.extrait || ''}</p>
-          <a href="${article.slug || article.id}.html"
+          <a href="article.html?slug=${article.slug || article.id}"
              class="inline-flex items-center text-sm font-medium text-brand-600 gap-1">
             Lire <span aria-hidden="true">→</span>
           </a>
@@ -449,7 +449,7 @@
 
     const date = new Date(hero.date_creation).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
     const mins = hero.temps_lecture ? `· ${hero.temps_lecture} min` : '';
-    const url  = hero.slug ? `${hero.slug}.html` : '#';
+    const url  = hero.slug ? `article.html?slug=${hero.slug}` : '#';
     const cat  = CAT_LABELS[hero.categorie] || hero.categorie || 'Article';
     const style = CAT_STYLES[hero.categorie] || CAT_STYLES['tests'];
 

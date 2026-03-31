@@ -139,19 +139,11 @@
       if (a.href.includes(`cat=${cat}`)) a.classList.add('text-brand-600', 'font-semibold');
     });
 
-    // Chargement des articles
-    async function loadArticles() {
-      const grid = document.getElementById('articles-grid');
-      const { data, error } = await db
-        .from('articles')
-        .select('id,titre,extrait,image_url,slug,temps_lecture,date_creation,categorie')
-        .eq('statut','publié')
-        .eq('categorie', cat)
-        .order('date_creation',{ ascending:false });
+    const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+    const CACHE_KEY = `tf_cat_${cat}`;
 
-      if (error || !data) {
-        grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-16">Erreur de chargement.</p>`; return;
-      }
+    function renderGrid(data) {
+      const grid = document.getElementById('articles-grid');
       if (!data.length) {
         grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-16">Aucun article dans cette rubrique pour l'instant.</p>`; return;
       }
@@ -171,13 +163,43 @@
                 <span class="text-gray-400 text-xs">${[date,mins].filter(Boolean).join(' · ')}</span>
               </div>
               <h2 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
-                <a href="${a.slug||a.id}.html">${a.titre}</a>
+                <a href="article.html?slug=${a.slug||a.id}">${a.titre}</a>
               </h2>
               <p class="text-sm text-gray-500 leading-relaxed flex-1">${a.extrait||''}</p>
-              <a href="${a.slug||a.id}.html" class="inline-flex items-center text-sm font-medium text-brand-600 gap-1">Lire <span>→</span></a>
+              <a href="article.html?slug=${a.slug||a.id}" class="inline-flex items-center text-sm font-medium text-brand-600 gap-1">Lire <span>→</span></a>
             </div>
           </article>`;
       }).join('');
+    }
+
+    async function fetchArticles(silent) {
+      const { data, error } = await db
+        .from('articles')
+        .select('id,titre,extrait,image_url,slug,temps_lecture,date_creation,categorie')
+        .eq('statut','publié')
+        .eq('categorie', cat)
+        .order('date_creation',{ ascending:false });
+
+      if (error || !data) {
+        if (!silent) document.getElementById('articles-grid').innerHTML =
+          `<p class="col-span-3 text-center text-gray-400 py-16">Erreur de chargement.</p>`;
+        return;
+      }
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch(e) {}
+      if (!silent) renderGrid(data);
+    }
+
+    // Chargement des articles avec cache
+    async function loadArticles() {
+      try {
+        const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+        if (cached && Date.now() - cached.ts < CACHE_TTL) {
+          renderGrid(cached.data);
+          fetchArticles(true); // rafraîchissement silencieux
+          return;
+        }
+      } catch(e) {}
+      await fetchArticles(false);
     }
     loadArticles();
   </script>
