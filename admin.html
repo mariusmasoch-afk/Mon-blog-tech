@@ -947,7 +947,6 @@
       extrait:      document.getElementById('excerpt-input').innerText.trim(),
       contenu:      document.getElementById('editor-body').innerHTML.trim(),
       slug:         document.getElementById('slug-input').value.trim(),
-      meta_desc:    document.getElementById('meta-desc').value.trim(),
       categorie:    document.querySelector('select').value,
       tags:         [...tags],
       image_url:    document.getElementById('cover-preview').src || null,
@@ -997,10 +996,9 @@
 
   // --- Insertion Sony WH-1000XM6 si absent ---
   async function ensureSonyArticle() {
-    // maybeSingle() ne plante pas si aucun résultat
-    const { data, error: checkErr } = await db
-      .from('articles').select('id').eq('slug', 'sony-wh1000xm6').maybeSingle();
-    if (data) return; // déjà présent
+    const { data: rows } = await db
+      .from('articles').select('id').eq('slug', 'sony-wh1000xm6').limit(1);
+    if (rows && rows.length > 0) return; // déjà présent
 
     const { error: insertErr } = await db.from('articles').insert([{
       titre: 'Sony WH-1000XM6 : le meilleur casque sans fil vaut-il vraiment son prix ?',
