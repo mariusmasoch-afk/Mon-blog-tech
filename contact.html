@@ -38,17 +38,23 @@
       <div>
         <h2 class="text-lg font-bold text-gray-900 mb-6">Envoyer un message</h2>
         <form class="space-y-4" onsubmit="handleSubmit(event)">
+          <!-- Web3Forms access key -->
+          <input type="hidden" name="access_key" value="REMPLACE_PAR_TA_CLE_WEB3FORMS" />
+          <input type="hidden" name="subject" id="hidden-subject" value="Nouveau message TechFlair" />
+          <input type="hidden" name="from_name" value="TechFlair Contact" />
+          <input type="checkbox" name="botcheck" class="hidden" />
+
           <div>
             <label class="text-xs font-medium text-gray-500 mb-1 block">Nom complet</label>
-            <input type="text" required placeholder="Votre nom" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 transition"/>
+            <input type="text" name="name" required placeholder="Votre nom" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 transition"/>
           </div>
           <div>
             <label class="text-xs font-medium text-gray-500 mb-1 block">Email</label>
-            <input type="email" required placeholder="vous@email.com" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 transition"/>
+            <input type="email" name="email" required placeholder="vous@email.com" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 transition"/>
           </div>
           <div>
             <label class="text-xs font-medium text-gray-500 mb-1 block">Sujet</label>
-            <select class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white transition">
+            <select name="sujet" id="sujet-select" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white transition">
               <option>Question générale</option>
               <option>Partenariat / UGC sponsorisé</option>
               <option>Écrire pour TechFlair</option>
@@ -58,10 +64,14 @@
           </div>
           <div>
             <label class="text-xs font-medium text-gray-500 mb-1 block">Message</label>
-            <textarea rows="5" required placeholder="Votre message…" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 resize-none leading-relaxed transition"></textarea>
+            <textarea name="message" rows="5" required placeholder="Votre message…" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-400 resize-none leading-relaxed transition"></textarea>
           </div>
-          <button type="submit" class="w-full py-3 rounded-xl bg-gray-900 text-white font-semibold text-sm hover:bg-gray-700 transition-colors">Envoyer le message</button>
-          <p id="form-msg" class="text-center text-sm text-emerald-600 hidden">✓ Message envoyé ! On vous répond sous 48h.</p>
+          <button type="submit" id="submit-btn" class="w-full py-3 rounded-xl bg-gray-900 text-white font-semibold text-sm hover:bg-gray-700 transition-colors flex items-center justify-center gap-2">
+            <span id="submit-label">Envoyer le message</span>
+            <svg id="submit-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+          </button>
+          <p id="form-success" class="hidden text-center text-sm text-emerald-600 font-medium">✓ Message envoyé ! On vous répond sous 48h.</p>
+          <p id="form-error" class="hidden text-center text-sm text-red-500">Une erreur est survenue. Réessayez ou écrivez-nous directement.</p>
         </form>
       </div>
 
@@ -118,10 +128,47 @@
   </footer>
 
   <script>
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
       e.preventDefault();
-      document.getElementById('form-msg').classList.remove('hidden');
-      e.target.reset();
+      const form = e.target;
+
+      // Mettre à jour le sujet avec la valeur du select
+      document.getElementById('hidden-subject').value =
+        'TechFlair — ' + document.getElementById('sujet-select').value;
+
+      // UI : loading
+      document.getElementById('submit-btn').disabled = true;
+      document.getElementById('submit-label').textContent = 'Envoi en cours…';
+      document.getElementById('submit-spinner').classList.remove('hidden');
+      document.getElementById('form-success').classList.add('hidden');
+      document.getElementById('form-error').classList.add('hidden');
+
+      const formData = new FormData(form);
+      const object   = Object.fromEntries(formData);
+      const json     = JSON.stringify(object);
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: json,
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          document.getElementById('form-success').classList.remove('hidden');
+          form.reset();
+        } else {
+          document.getElementById('form-error').classList.remove('hidden');
+        }
+      } catch {
+        document.getElementById('form-error').classList.remove('hidden');
+      }
+
+      // UI : reset bouton
+      document.getElementById('submit-btn').disabled = false;
+      document.getElementById('submit-label').textContent = 'Envoyer le message';
+      document.getElementById('submit-spinner').classList.add('hidden');
     }
   </script>
 </body>
