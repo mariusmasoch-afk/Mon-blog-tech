@@ -230,7 +230,8 @@
         <table class="w-full text-sm">
           <thead>
             <tr class="border-b border-gray-100 text-xs font-semibold uppercase tracking-wide text-gray-400">
-              <th class="text-left px-6 py-3">Titre</th>
+              <th class="px-4 py-3 text-center" title="Hero">★</th>
+              <th class="text-left px-4 py-3">Titre</th>
               <th class="text-left px-4 py-3 hidden sm:table-cell">Catégorie</th>
               <th class="text-left px-4 py-3 hidden md:table-cell">Date</th>
               <th class="text-left px-4 py-3">Statut</th>
@@ -238,7 +239,7 @@
             </tr>
           </thead>
           <tbody id="articles-table-body">
-            <tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">Chargement…</td></tr>
+            <tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">Chargement…</td></tr>
           </tbody>
         </table>
       </div>
@@ -670,16 +671,23 @@
   async function loadArticlesTable() {
     const tbody = document.getElementById('articles-table-body');
     const { data, error } = await db.from('articles')
-      .select('id, titre, categorie, statut, date_creation')
+      .select('id, titre, categorie, statut, date_creation, is_hero')
       .order('date_creation', { ascending: false });
 
     if (error || !data || !data.length) {
-      tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">Aucun article.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">Aucun article.</td></tr>';
       return;
     }
     tbody.innerHTML = data.map(a => `
-      <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-        <td class="px-6 py-3 text-sm font-medium text-gray-800 max-w-xs truncate">${a.titre}</td>
+      <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors ${a.is_hero ? 'bg-amber-50' : ''}">
+        <td class="px-4 py-3 text-center">
+          <button onclick="setHero('${a.id}', ${a.is_hero})"
+            title="${a.is_hero ? 'Article hero actuel' : 'Définir comme hero'}"
+            class="text-xl leading-none transition-transform hover:scale-125 ${a.is_hero ? 'text-amber-400' : 'text-gray-200 hover:text-amber-300'}">
+            ★
+          </button>
+        </td>
+        <td class="px-4 py-3 text-sm font-medium text-gray-800 max-w-xs truncate">${a.titre}</td>
         <td class="px-4 py-3 text-xs text-gray-500 hidden sm:table-cell">${a.categorie || '—'}</td>
         <td class="px-4 py-3 text-xs text-gray-400 hidden md:table-cell">${new Date(a.date_creation).toLocaleDateString('fr-FR')}</td>
         <td class="px-4 py-3">
@@ -687,10 +695,53 @@
             ${a.statut}
           </span>
         </td>
-        <td class="px-4 py-3 text-right">
+        <td class="px-4 py-3 text-right flex items-center justify-end gap-3">
+          <button onclick="editArticle('${a.id}')" class="text-xs text-brand-500 hover:text-brand-700 font-medium transition-colors">Modifier</button>
           <button onclick="deleteArticle('${a.id}')" class="text-xs text-red-400 hover:text-red-600 transition-colors">Supprimer</button>
         </td>
       </tr>`).join('');
+  }
+
+  async function setHero(id, isCurrentlyHero) {
+    if (isCurrentlyHero) return; // déjà hero, rien à faire
+    // Retirer le hero de tous les articles
+    await db.from('articles').update({ is_hero: false }).neq('id', '00000000-0000-0000-0000-000000000000');
+    // Définir le nouvel article hero
+    const { error } = await db.from('articles').update({ is_hero: true }).eq('id', id);
+    if (error) { showToast('Erreur : ' + error.message, false); return; }
+    showToast('⭐ Article défini comme hero du site !');
+    loadArticlesTable();
+  }
+
+  let currentEditId = null;
+
+  async function editArticle(id) {
+    const { data: a, error } = await db.from('articles')
+      .select('*').eq('id', id).single();
+    if (error || !a) { showToast('Impossible de charger l\'article.', false); return; }
+
+    currentEditId = id;
+    showView('editor');
+
+    // Remplir les champs
+    document.getElementById('title-input').innerText   = a.titre || '';
+    document.getElementById('excerpt-input').innerText = a.extrait || '';
+    document.getElementById('editor-body').innerHTML   = a.contenu || '';
+    document.getElementById('slug-input').value        = a.slug || '';
+    document.getElementById('meta-desc').value         = a.meta_desc || '';
+    if (a.image_url) showCoverPreview(a.image_url);
+
+    // Catégorie
+    const sel = document.querySelector('select[name="categorie"], select');
+    if (sel && a.categorie) sel.value = a.categorie;
+
+    // Indicateur visuel édition
+    document.getElementById('save-status').innerHTML =
+      '<span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span> Mode édition';
+    VIEW_META.editor.page = 'Modifier l\'article';
+    document.getElementById('breadcrumb-page').textContent = 'Modifier l\'article';
+    updateWordCount();
+    showToast('Article chargé — modifie et republier.');
   }
 
   async function deleteArticle(id) {
@@ -905,12 +956,13 @@
     const data = collectFormData('brouillon');
     if (!data.titre) { showToast('Ajoutez un titre avant de sauvegarder.', false); return; }
 
-    const { error } = await db.from('articles').insert([data]);
-    if (error) {
-      console.error(error);
-      showToast('Erreur : ' + error.message, false);
-      return;
+    let error;
+    if (currentEditId) {
+      ({ error } = await db.from('articles').update(data).eq('id', currentEditId));
+    } else {
+      ({ error } = await db.from('articles').insert([data]));
     }
+    if (error) { showToast('Erreur : ' + error.message, false); return; }
     document.getElementById('save-status').innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Brouillon sauvegardé';
     showToast('Brouillon enregistré avec succès');
@@ -920,20 +972,42 @@
     const data = collectFormData('publié');
     if (!data.titre) { showToast('Ajoutez un titre avant de publier.', false); return; }
 
-    const { error } = await db.from('articles').insert([data]);
-    if (error) {
-      console.error(error);
-      showToast('Erreur : ' + error.message, false);
-      return;
+    let error;
+    if (currentEditId) {
+      ({ error } = await db.from('articles').update(data).eq('id', currentEditId));
+    } else {
+      ({ error } = await db.from('articles').insert([data]));
     }
+    if (error) { showToast('Erreur : ' + error.message, false); return; }
     document.getElementById('save-status').innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span> Publié';
-    showToast('Article publié avec succès !');
+    showToast(currentEditId ? 'Article mis à jour !' : 'Article publié avec succès !');
+    currentEditId = null;
+    VIEW_META.editor.page = 'Nouvel article';
   }
 
   // --- Init default tags ---
   ['UGC', 'Test produit'].forEach(t => tags.push(t));
   renderTags();
+
+  // --- Insertion Sony WH-1000XM6 si absent ---
+  async function ensureSonyArticle() {
+    const { data } = await db.from('articles').select('id').eq('slug', 'sony-wh1000xm6').single();
+    if (data) return; // déjà présent
+    await db.from('articles').insert([{
+      titre: 'Sony WH-1000XM6 : le meilleur casque sans fil vaut-il vraiment son prix ?',
+      extrait: 'Réduction de bruit, autonomie de 30 heures, confort sur de longues sessions : on a testé le nouveau flagship de Sony pendant trois semaines pour vous dire l\'essentiel.',
+      categorie: 'tests',
+      image_url: 'hero-sony.jpg',
+      slug: 'sony-wh1000xm6',
+      temps_lecture: 8,
+      statut: 'publié',
+      is_hero: true,
+      auteur: 'Sophie Marchand',
+      meta_desc: 'Test complet du Sony WH-1000XM6 : réduction de bruit, qualité sonore, autonomie 30h. Le meilleur casque sans fil de 2026 vaut-il vraiment 399€ ?',
+    }]);
+  }
+  ensureSonyArticle();
 
   // --- Vue initiale ---
   showView('dashboard');
