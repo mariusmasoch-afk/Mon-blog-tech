@@ -129,6 +129,13 @@
 
       <p class="px-3 pt-4 mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">Système</p>
 
+      <div class="nav-item" onclick="showView('redacteurs')">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        Rédacteurs
+      </div>
+
       <div class="nav-item" onclick="showView('settings')">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
@@ -144,7 +151,7 @@
         <img src="https://i.pravatar.cc/32?img=3" alt="Avatar" class="w-8 h-8 rounded-full shrink-0" />
         <div class="min-w-0">
           <p class="text-sm font-medium text-gray-800 truncate">Sophie M.</p>
-          <p class="text-xs text-gray-400 truncate">Administratrice</p>
+          <p class="text-xs text-gray-400 truncate">Rédactrice</p>
         </div>
       </div>
     </div>
@@ -445,7 +452,7 @@
           <!-- Catégorie -->
           <div>
             <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Catégorie</h3>
-            <select class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-400 transition">
+            <select id="cat-select" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-400 transition">
               <option value="">Choisir une catégorie…</option>
               <option value="tests">Tests &amp; Avis</option>
               <option value="gadgets">Gadgets</option>
@@ -493,6 +500,17 @@
                   oninput="updateMetaCount()"></textarea>
               </div>
             </div>
+          </div>
+
+          <!-- Séparateur -->
+          <hr class="border-gray-200" />
+
+          <!-- Rédacteur -->
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Rédacteur</h3>
+            <select id="redacteur-select" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-400 transition">
+              <option value="">Aucun rédacteur</option>
+            </select>
           </div>
 
           <!-- Séparateur -->
@@ -568,6 +586,51 @@
       </div>
     </div>
 
+    <!-- ===================== VUE : RÉDACTEURS ===================== -->
+    <div id="view-redacteurs" class="flex-1 overflow-y-auto bg-gray-50 p-8 hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-gray-900">Rédacteurs</h2>
+        <button onclick="toggleRedacteurForm()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium hover:bg-gray-700 transition-colors">
+          + Ajouter un rédacteur
+        </button>
+      </div>
+
+      <!-- Formulaire ajout / édition -->
+      <div id="redacteur-form-wrapper" class="hidden mb-8">
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 max-w-xl space-y-4">
+          <h3 id="redacteur-form-title" class="font-semibold text-gray-800">Nouveau rédacteur</h3>
+          <input type="hidden" id="redacteur-edit-id" />
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs font-medium text-gray-500 mb-1 block">Prénom</label>
+              <input id="redacteur-prenom" type="text" placeholder="Marie" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
+            </div>
+            <div>
+              <label class="text-xs font-medium text-gray-500 mb-1 block">Nom</label>
+              <input id="redacteur-nom" type="text" placeholder="Dupont" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">URL photo</label>
+            <input id="redacteur-photo" type="text" placeholder="https://exemple.com/photo.jpg" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
+          </div>
+          <div>
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Bio courte</label>
+            <textarea id="redacteur-bio" rows="2" placeholder="Passionné de tech et de gadgets…" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400 resize-none"></textarea>
+          </div>
+          <div class="flex gap-3 pt-1">
+            <button onclick="saveRedacteur()" class="px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium hover:bg-gray-700 transition-colors">Enregistrer</button>
+            <button onclick="toggleRedacteurForm(false)" class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">Annuler</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grille des profils -->
+      <div id="redacteurs-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <p class="col-span-3 text-center text-gray-400 py-16">Chargement…</p>
+      </div>
+    </div>
+
   </div><!-- fin flex-1 main -->
 
 </div>
@@ -601,16 +664,17 @@
 
   // --- Navigation entre les vues ---
   const VIEW_META = {
-    dashboard: { section: 'Général',  page: 'Tableau de bord' },
-    articles:  { section: 'Contenu',  page: 'Tous les articles' },
-    editor:    { section: 'Contenu',  page: 'Nouvel article' },
-    medias:    { section: 'Contenu',  page: 'Médias' },
-    settings:  { section: 'Système',  page: 'Paramètres' },
+    dashboard:  { section: 'Général',  page: 'Tableau de bord' },
+    articles:   { section: 'Contenu',  page: 'Tous les articles' },
+    editor:     { section: 'Contenu',  page: 'Nouvel article' },
+    medias:     { section: 'Contenu',  page: 'Médias' },
+    redacteurs: { section: 'Système',  page: 'Rédacteurs' },
+    settings:   { section: 'Système',  page: 'Paramètres' },
   };
 
   function showView(name) {
     // Masquer toutes les vues
-    ['dashboard','articles','editor','medias','settings'].forEach(v => {
+    ['dashboard','articles','editor','medias','redacteurs','settings'].forEach(v => {
       const el = document.getElementById('view-' + v);
       if (el) el.classList.add('hidden');
     });
@@ -626,13 +690,15 @@
     // Mettre à jour la nav active
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
     const navItems = document.querySelectorAll('.nav-item');
-    const order = ['dashboard','articles','editor','medias','settings'];
+    const order = ['dashboard','articles','editor','medias','redacteurs','settings'];
     const idx = order.indexOf(name);
     if (navItems[idx]) navItems[idx].classList.add('active');
 
     // Charger les données de la vue si nécessaire
-    if (name === 'dashboard') loadDashboard();
-    if (name === 'articles')  loadArticlesTable();
+    if (name === 'dashboard')  loadDashboard();
+    if (name === 'articles')   loadArticlesTable();
+    if (name === 'redacteurs') loadRedacteurs();
+    if (name === 'editor')     loadRedacteurSelect();
   }
 
   // --- Dashboard : chargement stats + liste récente ---
@@ -737,8 +803,12 @@
     if (a.image_url) showCoverPreview(a.image_url);
 
     // Catégorie
-    const sel = document.querySelector('select[name="categorie"], select');
+    const sel = document.getElementById('cat-select');
     if (sel && a.categorie) sel.value = a.categorie;
+
+    // Rédacteur
+    await loadRedacteurSelect();
+    if (a.redacteur_id) document.getElementById('redacteur-select').value = a.redacteur_id;
 
     // Indicateur visuel édition
     document.getElementById('save-status').innerHTML =
@@ -942,16 +1012,18 @@
 
   // --- Collecte les données du formulaire ---
   function collectFormData(statut) {
+    const redacteurVal = document.getElementById('redacteur-select').value;
     return {
-      titre:        document.getElementById('title-input').innerText.trim(),
-      extrait:      document.getElementById('excerpt-input').innerText.trim(),
-      contenu:      document.getElementById('editor-body').innerHTML.trim(),
-      slug:         document.getElementById('slug-input').value.trim(),
-      categorie:    document.querySelector('select').value,
-      tags:         [...tags],
-      image_url:    document.getElementById('cover-preview').src || null,
-      statut,       // 'brouillon' ou 'publié'
+      titre:         document.getElementById('title-input').innerText.trim(),
+      extrait:       document.getElementById('excerpt-input').innerText.trim(),
+      contenu:       document.getElementById('editor-body').innerHTML.trim(),
+      slug:          document.getElementById('slug-input').value.trim(),
+      categorie:     document.getElementById('cat-select').value,
+      tags:          [...tags],
+      image_url:     document.getElementById('cover-preview').src || null,
+      statut,
       temps_lecture: parseInt(document.getElementById('read-time').textContent) || null,
+      redacteur_id:  redacteurVal || null,
     };
   }
 
@@ -993,6 +1065,121 @@
   // --- Init default tags ---
   ['UGC', 'Test produit'].forEach(t => tags.push(t));
   renderTags();
+
+  // ============================================================
+  // RÉDACTEURS
+  // ============================================================
+
+  function toggleRedacteurForm(show) {
+    const wrapper = document.getElementById('redacteur-form-wrapper');
+    const isHidden = wrapper.classList.contains('hidden');
+    if (show === false || !isHidden) {
+      // Fermer et réinitialiser
+      wrapper.classList.add('hidden');
+      document.getElementById('redacteur-edit-id').value = '';
+      document.getElementById('redacteur-prenom').value  = '';
+      document.getElementById('redacteur-nom').value     = '';
+      document.getElementById('redacteur-photo').value   = '';
+      document.getElementById('redacteur-bio').value     = '';
+      document.getElementById('redacteur-form-title').textContent = 'Nouveau rédacteur';
+    } else {
+      wrapper.classList.remove('hidden');
+      document.getElementById('redacteur-prenom').focus();
+    }
+  }
+
+  async function loadRedacteurs() {
+    const grid = document.getElementById('redacteurs-grid');
+    const { data, error } = await db.from('redacteurs').select('*').order('nom');
+    if (error) {
+      grid.innerHTML = `<p class="col-span-3 text-center text-red-400 py-16">Erreur : ${error.message}</p>`;
+      return;
+    }
+    if (!data || !data.length) {
+      grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-16">Aucun rédacteur pour l'instant. Ajoutez-en un !</p>`;
+      return;
+    }
+    grid.innerHTML = data.map(r => {
+      const avatar = r.photo_url
+        ? `<img src="${r.photo_url}" alt="${r.prenom} ${r.nom}" class="w-16 h-16 rounded-full object-cover shrink-0 border-2 border-gray-100" />`
+        : `<div class="w-16 h-16 rounded-full bg-brand-100 flex items-center justify-center shrink-0 text-brand-600 font-bold text-xl">${r.prenom[0]}${r.nom[0]}</div>`;
+      return `
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            ${avatar}
+            <div class="min-w-0">
+              <p class="font-semibold text-gray-900 truncate">${r.prenom} ${r.nom}</p>
+              <p class="text-xs text-gray-400 mt-0.5">Rédacteur</p>
+            </div>
+          </div>
+          ${r.bio ? `<p class="text-sm text-gray-500 leading-relaxed">${r.bio}</p>` : ''}
+          <div class="flex gap-2 mt-auto pt-2 border-t border-gray-50">
+            <button onclick="editRedacteur('${r.id}')" class="flex-1 text-xs font-medium text-brand-600 hover:text-brand-700 transition-colors py-1">Modifier</button>
+            <button onclick="deleteRedacteur('${r.id}')" class="flex-1 text-xs font-medium text-red-400 hover:text-red-600 transition-colors py-1">Supprimer</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  async function saveRedacteur() {
+    const id     = document.getElementById('redacteur-edit-id').value;
+    const prenom = document.getElementById('redacteur-prenom').value.trim();
+    const nom    = document.getElementById('redacteur-nom').value.trim();
+    const photo  = document.getElementById('redacteur-photo').value.trim();
+    const bio    = document.getElementById('redacteur-bio').value.trim();
+
+    if (!prenom || !nom) { showToast('Prénom et nom obligatoires.', false); return; }
+
+    const payload = { prenom, nom, photo_url: photo || null, bio: bio || null };
+    let error;
+    if (id) {
+      ({ error } = await db.from('redacteurs').update(payload).eq('id', id));
+    } else {
+      ({ error } = await db.from('redacteurs').insert([payload]));
+    }
+    if (error) { showToast('Erreur : ' + error.message, false); return; }
+    showToast(id ? 'Rédacteur mis à jour !' : 'Rédacteur ajouté !');
+    toggleRedacteurForm(false);
+    loadRedacteurs();
+  }
+
+  async function editRedacteur(id) {
+    const { data: r, error } = await db.from('redacteurs').select('*').eq('id', id).single();
+    if (error || !r) { showToast('Impossible de charger le rédacteur.', false); return; }
+    document.getElementById('redacteur-edit-id').value = r.id;
+    document.getElementById('redacteur-prenom').value  = r.prenom;
+    document.getElementById('redacteur-nom').value     = r.nom;
+    document.getElementById('redacteur-photo').value   = r.photo_url || '';
+    document.getElementById('redacteur-bio').value     = r.bio || '';
+    document.getElementById('redacteur-form-title').textContent = 'Modifier le rédacteur';
+    document.getElementById('redacteur-form-wrapper').classList.remove('hidden');
+    document.getElementById('redacteur-prenom').focus();
+  }
+
+  async function deleteRedacteur(id) {
+    if (!confirm('Supprimer ce rédacteur ?')) return;
+    const { error } = await db.from('redacteurs').delete().eq('id', id);
+    if (error) { showToast('Erreur : ' + error.message, false); return; }
+    showToast('Rédacteur supprimé');
+    loadRedacteurs();
+  }
+
+  async function loadRedacteurSelect() {
+    const sel = document.getElementById('redacteur-select');
+    const { data } = await db.from('redacteurs').select('id, prenom, nom').order('nom');
+    // Conserver la valeur actuelle
+    const current = sel.value;
+    sel.innerHTML = '<option value="">Aucun rédacteur</option>';
+    if (data && data.length) {
+      data.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.id;
+        opt.textContent = `${r.prenom} ${r.nom}`;
+        sel.appendChild(opt);
+      });
+    }
+    if (current) sel.value = current;
+  }
 
   // --- Insertion Sony WH-1000XM6 si absent ---
   async function ensureSonyArticle() {
