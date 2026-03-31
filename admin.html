@@ -810,12 +810,28 @@
 
   async function deleteArticle(id) {
     if (!confirm('Supprimer cet article définitivement ?')) return;
+
+    // Récupérer le slug avant suppression pour purger le bon cache
+    const { data: article } = await db.from('articles').select('slug, is_hero').eq('id', id).limit(1);
+
     const { error } = await db.from('articles').delete().eq('id', id);
     if (error) {
       console.error('Erreur suppression:', error);
       showToast('Erreur : ' + error.message, false);
       return;
     }
+
+    // Purger tous les caches liés à cet article
+    if (article && article[0]) {
+      const { slug, is_hero } = article[0];
+      // Cache de la page article
+      if (slug) localStorage.removeItem(`tf_article_${slug}`);
+      // Cache hero si c'était le hero
+      if (is_hero) localStorage.removeItem('tf_hero');
+      // Cache des catégories (on purge tout pour être sûr)
+      ['tests', 'gadgets', 'logiciels'].forEach(cat => localStorage.removeItem(`tf_cat_${cat}`));
+    }
+
     showToast('Article supprimé');
     loadArticlesTable();
     loadDashboard();
