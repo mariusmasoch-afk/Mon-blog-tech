@@ -412,18 +412,14 @@
   }
 
   // ============================================================
-  // HERO DYNAMIQUE — charge l'article marqué is_hero=true
+  // HERO DYNAMIQUE — cache localStorage + refresh silencieux
   // ============================================================
-  async function loadHero() {
-    const { data: hero } = await db
-      .from('articles')
-      .select('id, titre, extrait, categorie, image_url, slug, temps_lecture, date_creation, auteur')
-      .eq('statut', 'publié')
-      .eq('is_hero', true)
-      .single();
+  const HERO_CACHE_KEY = 'tf_hero';
+  const HERO_CACHE_TTL = 60 * 60 * 1000; // 1 heure
 
+  function renderHero(hero) {
     const grid = document.getElementById('hero-grid');
-    if (!hero) return; // garde le skeleton si pas de hero défini
+    if (!hero) return;
 
     const date = new Date(hero.date_creation).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
     const mins = hero.temps_lecture ? `· ${hero.temps_lecture} min` : '';
@@ -468,6 +464,32 @@
         ${imageHTML}
         <span class="absolute top-4 left-4 bg-gray-900/80 backdrop-blur text-white text-xs font-medium px-3 py-1.5 rounded-full">${cat}</span>
       </div>`;
+  }
+
+  async function loadHero() {
+    // 1. Affichage instantané depuis le cache si disponible
+    try {
+      const cached = JSON.parse(localStorage.getItem(HERO_CACHE_KEY));
+      if (cached && (Date.now() - cached.ts < HERO_CACHE_TTL)) {
+        renderHero(cached.data);
+      }
+    } catch(e) {}
+
+    // 2. Fetch Supabase en arrière-plan (silencieux)
+    const { data: hero } = await db
+      .from('articles')
+      .select('id, titre, extrait, categorie, image_url, slug, temps_lecture, date_creation, auteur')
+      .eq('statut', 'publié')
+      .eq('is_hero', true)
+      .single();
+
+    if (!hero) return;
+
+    // 3. Mise à jour du cache
+    localStorage.setItem(HERO_CACHE_KEY, JSON.stringify({ data: hero, ts: Date.now() }));
+
+    // 4. Mettre à jour l'affichage (invisible si déjà le même contenu)
+    renderHero(hero);
   }
 
   loadHero();
