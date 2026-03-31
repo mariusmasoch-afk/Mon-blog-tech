@@ -1022,6 +1022,11 @@
   // --- Collecte les données du formulaire ---
   function collectFormData(statut) {
     const redacteurVal = document.getElementById('redacteur-select').value;
+    const coverEl = document.getElementById('cover-preview');
+    // image_url = src uniquement si l'image est visible (sinon le browser retourne l'URL de la page)
+    const image_url = (!coverEl.classList.contains('hidden') && coverEl.src && !coverEl.src.endsWith('admin.html'))
+      ? coverEl.src
+      : null;
     return {
       titre:         document.getElementById('title-input').innerText.trim(),
       extrait:       document.getElementById('excerpt-input').innerText.trim(),
@@ -1029,7 +1034,7 @@
       slug:          document.getElementById('slug-input').value.trim(),
       categorie:     document.getElementById('cat-select').value,
       tags:          [...tags],
-      image_url:     document.getElementById('cover-preview').src || null,
+      image_url,
       statut,
       temps_lecture: parseInt(document.getElementById('read-time').textContent) || null,
       redacteur_id:  redacteurVal || null,
@@ -1047,7 +1052,15 @@
     } else {
       ({ error } = await db.from('articles').insert([data]));
     }
-    if (error) { showToast('Erreur : ' + error.message, false); return; }
+    if (error) {
+      console.error('Erreur brouillon:', error);
+      showToast('Erreur : ' + error.message, false);
+      return;
+    }
+    // Purger le cache de cet article
+    if (data.slug) localStorage.removeItem(`tf_article_${data.slug}`);
+    ['tests', 'gadgets', 'logiciels'].forEach(cat => localStorage.removeItem(`tf_cat_${cat}`));
+
     document.getElementById('save-status').innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Brouillon sauvegardé';
     showToast('Brouillon enregistré avec succès');
@@ -1058,24 +1071,31 @@
     if (!data.titre) { showToast('Ajoutez un titre avant de publier.', false); return; }
     if (!data.slug)  { showToast('Ajoutez un slug avant de publier.', false); return; }
 
+    const isUpdate = !!currentEditId;
     let error;
-    if (currentEditId) {
+    if (isUpdate) {
       ({ error } = await db.from('articles').update(data).eq('id', currentEditId));
     } else {
       ({ error } = await db.from('articles').insert([data]));
     }
-    if (error) { showToast('Erreur : ' + error.message, false); return; }
 
-    // Invalider le cache hero/index pour que l'accueil reflète les changements
+    if (error) {
+      console.error('Erreur publication:', error);
+      showToast('Erreur : ' + error.message, false);
+      return;
+    }
+
+    // Purger TOUS les caches liés à cet article pour que le site soit à jour partout
     localStorage.removeItem('tf_hero');
+    localStorage.removeItem(`tf_article_${data.slug}`);
+    ['tests', 'gadgets', 'logiciels'].forEach(cat => localStorage.removeItem(`tf_cat_${cat}`));
 
     document.getElementById('save-status').innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span> Publié';
 
-    // Afficher le lien vers l'article publié
-    showPublishSuccess(data.slug, currentEditId !== null);
+    showPublishSuccess(data.slug, isUpdate);
 
-    if (!currentEditId) {
+    if (!isUpdate) {
       // Réinitialiser l'éditeur pour un nouvel article
       document.getElementById('title-input').innerText   = '';
       document.getElementById('excerpt-input').innerText = '';
