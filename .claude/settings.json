@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"/Users/marius0910/Documents/claude code/Techflair\" && git add -A && git diff --cached --quiet || git commit -m \"Auto-save: $(date '+%Y-%m-%d %H:%M')\" && git push origin main 2>/dev/null || true",
+            "command": "cd \"/Users/marius0910/Documents/claude code/Techflair\" && git add -A && git diff --cached --quiet || git commit -m \"Auto-save: $(date '+%Y-%m-%d %H:%M')\" && git pull --rebase origin main 2>/dev/null && git push origin main 2>/dev/null || true",
             "statusMessage": "Sauvegarde GitHub..."
           }
         ]
