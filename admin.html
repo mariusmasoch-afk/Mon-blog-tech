@@ -811,7 +811,11 @@
   async function deleteArticle(id) {
     if (!confirm('Supprimer cet article définitivement ?')) return;
     const { error } = await db.from('articles').delete().eq('id', id);
-    if (error) { showToast('Erreur : ' + error.message, false); return; }
+    if (error) {
+      console.error('Erreur suppression:', error);
+      showToast('Erreur : ' + error.message, false);
+      return;
+    }
     showToast('Article supprimé');
     loadArticlesTable();
     loadDashboard();
