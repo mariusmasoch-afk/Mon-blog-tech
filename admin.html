@@ -647,8 +647,26 @@
             </div>
           </div>
           <div>
-            <label class="text-xs font-medium text-gray-500 mb-1 block">URL photo</label>
-            <input id="redacteur-photo" type="text" placeholder="https://exemple.com/photo.jpg" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
+            <label class="text-xs font-medium text-gray-500 mb-1 block">Photo</label>
+            <div class="flex items-center gap-4">
+              <!-- Prévisualisation -->
+              <div id="redacteur-photo-preview-wrap" class="w-16 h-16 rounded-2xl bg-gray-100 border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden shrink-0">
+                <svg id="redacteur-photo-placeholder" class="w-6 h-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                <img id="redacteur-photo-preview" src="" alt="" class="hidden w-full h-full object-cover object-center" />
+              </div>
+              <!-- Bouton upload + champ caché pour stocker la valeur -->
+              <div class="flex-1 space-y-2">
+                <label class="inline-flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm text-gray-600 font-medium">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                  Choisir une photo
+                  <input type="file" accept="image/*" class="hidden" onchange="previewRedacteurPhoto(this)" />
+                </label>
+                <p class="text-xs text-gray-400">JPG, PNG · max 2 Mo</p>
+                <button id="redacteur-photo-remove" onclick="removeRedacteurPhoto()" class="hidden text-xs text-red-400 hover:text-red-600 transition-colors">Supprimer la photo</button>
+              </div>
+            </div>
+            <!-- Champ caché qui stocke la valeur finale (base64 ou URL existante) -->
+            <input type="hidden" id="redacteur-photo" />
           </div>
           <div>
             <label class="text-xs font-medium text-gray-500 mb-1 block">Bio courte</label>
@@ -1208,17 +1226,51 @@
   // RÉDACTEURS
   // ============================================================
 
+  function previewRedacteurPhoto(input) {
+    if (!input.files[0]) return;
+    const file = input.files[0];
+    if (file.size > 2 * 1024 * 1024) { showToast('Photo trop lourde (max 2 Mo)', false); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('redacteur-photo').value = e.target.result;
+      document.getElementById('redacteur-photo-preview').src = e.target.result;
+      document.getElementById('redacteur-photo-preview').classList.remove('hidden');
+      document.getElementById('redacteur-photo-placeholder').classList.add('hidden');
+      document.getElementById('redacteur-photo-remove').classList.remove('hidden');
+      document.getElementById('redacteur-photo-preview-wrap').classList.remove('border-dashed');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeRedacteurPhoto() {
+    document.getElementById('redacteur-photo').value = '';
+    document.getElementById('redacteur-photo-preview').src = '';
+    document.getElementById('redacteur-photo-preview').classList.add('hidden');
+    document.getElementById('redacteur-photo-placeholder').classList.remove('hidden');
+    document.getElementById('redacteur-photo-remove').classList.add('hidden');
+    document.getElementById('redacteur-photo-preview-wrap').classList.add('border-dashed');
+  }
+
+  function setRedacteurPhotoPreview(url) {
+    if (!url) return;
+    document.getElementById('redacteur-photo').value = url;
+    document.getElementById('redacteur-photo-preview').src = url;
+    document.getElementById('redacteur-photo-preview').classList.remove('hidden');
+    document.getElementById('redacteur-photo-placeholder').classList.add('hidden');
+    document.getElementById('redacteur-photo-remove').classList.remove('hidden');
+    document.getElementById('redacteur-photo-preview-wrap').classList.remove('border-dashed');
+  }
+
   function toggleRedacteurForm(show) {
     const wrapper = document.getElementById('redacteur-form-wrapper');
     const isHidden = wrapper.classList.contains('hidden');
     if (show === false || !isHidden) {
-      // Fermer et réinitialiser
       wrapper.classList.add('hidden');
       document.getElementById('redacteur-edit-id').value = '';
       document.getElementById('redacteur-prenom').value  = '';
       document.getElementById('redacteur-nom').value     = '';
-      document.getElementById('redacteur-photo').value   = '';
       document.getElementById('redacteur-bio').value     = '';
+      removeRedacteurPhoto();
       document.getElementById('redacteur-form-title').textContent = 'Nouveau rédacteur';
     } else {
       wrapper.classList.remove('hidden');
@@ -1287,8 +1339,9 @@
     document.getElementById('redacteur-edit-id').value = r.id;
     document.getElementById('redacteur-prenom').value  = r.prenom;
     document.getElementById('redacteur-nom').value     = r.nom;
-    document.getElementById('redacteur-photo').value   = r.photo_url || '';
     document.getElementById('redacteur-bio').value     = r.bio || '';
+    removeRedacteurPhoto();
+    if (r.photo_url) setRedacteurPhotoPreview(r.photo_url);
     document.getElementById('redacteur-form-title').textContent = 'Modifier le rédacteur';
     document.getElementById('redacteur-form-wrapper').classList.remove('hidden');
     document.getElementById('redacteur-prenom').focus();
