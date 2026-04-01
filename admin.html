@@ -1170,6 +1170,9 @@
   async function saveDraft() {
     const data = collectFormData('brouillon');
     if (!data.titre) { showToast('Ajoutez un titre avant de sauvegarder.', false); return; }
+    if (data.contenu && data.contenu.includes('data:image')) {
+      data.contenu = await processContentImages(data.contenu);
+    }
 
     let error;
     if (currentEditId) {
@@ -1191,10 +1194,41 @@
     showToast('Brouillon enregistré avec succès');
   }
 
+  // Détecte les images base64 dans le contenu HTML, les uploade sur Supabase Storage
+  // et remplace les data: URLs par de vraies URLs https://
+  async function processContentImages(html) {
+    if (!html || !html.includes('data:image')) return html;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const images = doc.querySelectorAll('img[src^="data:"]');
+    for (const img of images) {
+      try {
+        const res = await fetch(img.src);
+        const blob = await res.blob();
+        const ext = (blob.type.split('/')[1] || 'png').replace('jpeg', 'jpg');
+        const path = `content/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { error } = await db.storage.from('images').upload(path, blob, { upsert: true });
+        if (error) throw error;
+        const { data } = db.storage.from('images').getPublicUrl(path);
+        img.src = data.publicUrl;
+      } catch(err) {
+        console.error('Erreur upload image contenu:', err);
+        img.remove(); // supprimer l'image si l'upload échoue
+      }
+    }
+    return doc.body.innerHTML;
+  }
+
   async function publishArticle() {
     const data = collectFormData('publié');
     if (!data.titre) { showToast('Ajoutez un titre avant de publier.', false); return; }
     if (!data.slug)  { showToast('Ajoutez un slug avant de publier.', false); return; }
+
+    // Traiter les images base64 dans le contenu avant d'envoyer à Supabase
+    if (data.contenu && data.contenu.includes('data:image')) {
+      showToast('Traitement des images en cours…');
+      data.contenu = await processContentImages(data.contenu);
+    }
 
     const isUpdate = !!currentEditId;
     console.log('[Publish] isUpdate:', isUpdate, '| currentEditId:', currentEditId);
