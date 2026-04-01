@@ -923,6 +923,8 @@
     document.getElementById('editor-body').innerHTML   = a.contenu || '';
     document.getElementById('slug-input').value        = a.slug || '';
     document.getElementById('meta-desc').value         = a.meta_desc || '';
+    metaEdited = !!a.meta_desc;
+    tags.length = 0; renderTags();
     if (a.image_url) {
       showCoverPreview(a.image_url);
       coverStorageUrl = a.image_url.startsWith('http') ? a.image_url : null;
