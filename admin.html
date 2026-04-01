@@ -423,6 +423,7 @@
             class="text-3xl font-bold text-gray-900 leading-tight mb-6 empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300 focus:outline-none"
             style="min-height:2.5rem"
             oninput="updateSaveStatus()"
+            onblur="autoSuggestTags()"
           ></div>
 
           <!-- Extrait -->
@@ -432,7 +433,7 @@
             data-placeholder="Ajoutez un court extrait visible dans la grille d'articles…"
             class="text-base text-gray-400 italic mb-8 pb-8 border-b border-dashed border-gray-200 empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300 focus:outline-none leading-relaxed"
             style="min-height:1.5rem"
-            oninput="updateSaveStatus()"
+            oninput="updateSaveStatus(); autoFillMetaDesc()"
           ></div>
 
           <!-- Corps de l'article -->
