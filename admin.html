@@ -77,6 +77,55 @@
 </head>
 
 <body class="h-full bg-gray-50 font-sans antialiased">
+
+  <!-- ====== GATE D'AUTHENTIFICATION ====== -->
+  <div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#f9fafb;display:flex;align-items:center;justify-content:center;">
+    <div style="width:100%;max-width:380px;padding:2rem;background:#fff;border-radius:1.25rem;box-shadow:0 4px 32px rgba(0,0,0,0.08);border:1px solid #f3f4f6;margin:1rem;">
+      <p style="font-size:1.25rem;font-weight:700;color:#111827;margin:0 0 4px;">Tech<span style="color:#0ea5e9;">Flair</span></p>
+      <p style="font-size:.8rem;color:#9ca3af;margin:0 0 1.5rem;">Administration — accès restreint</p>
+      <div id="auth-error" style="display:none;background:#fef2f2;color:#ef4444;font-size:.8rem;padding:.6rem .9rem;border-radius:.6rem;margin-bottom:1rem;">Mot de passe incorrect.</div>
+      <input id="auth-input" type="password" placeholder="Mot de passe" autocomplete="current-password"
+        style="width:100%;padding:.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:.75rem;font-size:.9rem;outline:none;box-sizing:border-box;margin-bottom:.75rem;"
+        onkeydown="if(event.key==='Enter')checkAuth()" />
+      <button onclick="checkAuth()"
+        style="width:100%;padding:.75rem;background:#111827;color:#fff;font-weight:600;font-size:.9rem;border:none;border-radius:.75rem;cursor:pointer;">
+        Connexion
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ── Hash SHA-256 du mot de passe (ne pas stocker le mot de passe en clair)
+    // Mot de passe par défaut : TechFlair2026!
+    // Pour changer : ouvrir la console et taper sha256('NouveauMotDePasse')
+    //   puis remplacer la valeur de PASS_HASH ci-dessous.
+    const PASS_HASH = 'baf18531f9bfa91e440ce1bddae40089cc25e3076f51b2ad16113d85c3034ed4';
+    const SESSION_KEY = 'tf_admin_session';
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+
+    async function checkAuth() {
+      const input = document.getElementById('auth-input');
+      const hash = await sha256(input.value);
+      if (hash === PASS_HASH) {
+        sessionStorage.setItem(SESSION_KEY, '1');
+        document.getElementById('auth-gate').remove();
+      } else {
+        document.getElementById('auth-error').style.display = 'block';
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    // Vérifier si déjà authentifié dans cette session
+    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+      document.getElementById('auth-gate').remove();
+    }
+  </script>
+  <!-- ====== FIN GATE ====== -->
 <div class="flex h-screen overflow-hidden">
 
   <!-- ============================================================
