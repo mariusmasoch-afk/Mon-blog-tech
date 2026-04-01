@@ -933,6 +933,9 @@
     const sel = document.getElementById('cat-select');
     if (sel && a.categorie) sel.value = a.categorie;
 
+    // Lien d'achat
+    document.getElementById('buy-link-input').value = a.lien_achat || '';
+
     // Rédacteur
     await loadRedacteurSelect();
     if (a.redacteur_id) document.getElementById('redacteur-select').value = a.redacteur_id;
