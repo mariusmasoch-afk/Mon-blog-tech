@@ -1293,17 +1293,20 @@
   }
 
   async function sendNewsletter(slug, titre, extrait, articleUrl) {
+    console.log('[NL] sendNewsletter appelé pour:', slug);
     const BREVO_KEY = ['xkeysib-3fc9e52d63280524b68210e24bb159f27af7f174fe992cd6ade7c305ab99edb7', 'tsMyonxlZLRuybs7'].join('-');
     const btn = document.getElementById('nl-send-btn');
-    btn.textContent = 'Envoi…';
-    btn.disabled = true;
+    if (btn) { btn.textContent = 'Envoi…'; btn.disabled = true; }
 
-    const { data: abonnes } = await db.from('abonnes').select('email');
-    if (!abonnes || !abonnes.length) {
-      document.getElementById('newsletter-prompt')?.remove();
-      showToast('Aucun abonné pour l\'instant.', false);
-      return;
-    }
+    try {
+      const { data: abonnes, error: dbErr } = await db.from('abonnes').select('email');
+      console.log('[NL] abonnés:', abonnes, 'erreur:', dbErr);
+      if (dbErr) throw new Error('Supabase: ' + dbErr.message);
+      if (!abonnes || !abonnes.length) {
+        document.getElementById('newsletter-prompt')?.remove();
+        showToast('Aucun abonné pour l\'instant.', false);
+        return;
+      }
 
     let sent = 0, failed = 0;
     for (const { email } of abonnes) {
@@ -1337,11 +1340,16 @@
       } catch(err) { failed++; console.error('Fetch error:', err); }
     }
 
-    document.getElementById('newsletter-prompt').remove();
-    showToast(failed === 0
-      ? `✉️ Newsletter envoyée à ${sent} abonné${sent > 1 ? 's' : ''} !`
-      : `Envoyé à ${sent}, échec pour ${failed}.`,
-      failed === 0);
+      document.getElementById('newsletter-prompt')?.remove();
+      showToast(failed === 0
+        ? `Newsletter envoyée à ${sent} abonné${sent > 1 ? 's' : ''} !`
+        : `Envoyé à ${sent}, échec pour ${failed}.`,
+        failed === 0);
+    } catch(globalErr) {
+      console.error('[NL] Erreur globale:', globalErr);
+      document.getElementById('newsletter-prompt')?.remove();
+      showToast('Erreur newsletter : ' + globalErr.message, false);
+    }
   }
 
   // --- Init default tags ---
