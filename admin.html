@@ -826,6 +826,7 @@
           </span>
         </td>
         <td class="px-4 py-3 text-right flex items-center justify-end gap-3">
+          ${a.statut === 'publié' ? `<button onclick="sendNewsletterForArticle('${a.id}')" title="Envoyer newsletter" class="text-xs text-gray-400 hover:text-brand-500 transition-colors">✉️</button>` : ''}
           <button onclick="editArticle('${a.id}')" class="text-xs text-brand-500 hover:text-brand-700 font-medium transition-colors">Modifier</button>
           <button onclick="deleteArticle('${a.id}')" class="text-xs text-red-400 hover:text-red-600 transition-colors">Supprimer</button>
         </td>
@@ -1231,48 +1232,61 @@
       toast.classList.add('opacity-0', 'translate-y-2');
     }, 6000);
 
-    // Proposer l'envoi newsletter uniquement pour un nouvel article et si la case est cochée
-    if (!isUpdate && sendNl) {
-      showNewsletterPrompt(slug, titre, extrait, articleUrl);
+    // Proposer l'envoi newsletter si la case est cochée (nouvel article ou mise à jour)
+    if (sendNl) {
+      showNewsletterPrompt(slug, titre, extrait, articleUrl, isUpdate);
     }
   }
 
-  function showNewsletterPrompt(slug, titre, extrait, articleUrl) {
+  function showNewsletterPrompt(slug, titre, extrait, articleUrl, isUpdate = false) {
     const existing = document.getElementById('newsletter-prompt');
     if (existing) existing.remove();
 
+    const label = isUpdate ? 'Notifier les abonnés de la mise à jour ?' : 'Envoyer la newsletter ?';
+
     const prompt = document.createElement('div');
     prompt.id = 'newsletter-prompt';
-    prompt.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-white border border-gray-100 shadow-2xl rounded-2xl px-6 py-5 flex items-center gap-5 max-w-md w-full';
+    prompt.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-white border border-gray-100 shadow-2xl rounded-2xl px-6 py-5 flex items-center gap-5 max-w-md w-full mx-4';
     prompt.innerHTML = `
       <div class="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center shrink-0">
         <svg class="w-5 h-5 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
       </div>
       <div class="flex-1 min-w-0">
-        <p class="text-sm font-semibold text-gray-900">Envoyer la newsletter ?</p>
+        <p class="text-sm font-semibold text-gray-900">${label}</p>
         <p class="text-xs text-gray-400 mt-0.5" id="nl-count">Chargement des abonnés…</p>
       </div>
       <div class="flex gap-2 shrink-0">
         <button onclick="sendNewsletter('${slug}', ${JSON.stringify(titre)}, ${JSON.stringify(extrait)}, '${articleUrl}')"
           id="nl-send-btn"
-          class="px-4 py-2 rounded-xl bg-gray-900 text-white text-xs font-semibold hover:bg-gray-700 transition-colors">
+          class="px-4 py-2 rounded-xl bg-gray-900 text-white text-xs font-semibold hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
           Envoyer
         </button>
         <button onclick="document.getElementById('newsletter-prompt').remove()"
           class="px-3 py-2 rounded-xl border border-gray-200 text-gray-500 text-xs hover:bg-gray-50 transition-colors">
-          Plus tard
+          Ignorer
         </button>
       </div>
     `;
     document.body.appendChild(prompt);
 
     // Compter les abonnés
-    db.from('abonnes').select('email').then(({ data }) => {
-      const count = data ? data.length : 0;
-      document.getElementById('nl-count').textContent =
-        count > 0 ? `${count} abonné${count > 1 ? 's' : ''} vont recevoir cet article` : 'Aucun abonné pour l\'instant';
-      if (count === 0) document.getElementById('nl-send-btn').disabled = true;
+    db.from('abonnes').select('email', { count: 'exact', head: true }).then(({ count }) => {
+      const n = count || 0;
+      const el = document.getElementById('nl-count');
+      if (!el) return;
+      el.textContent = n > 0
+        ? `${n} abonné${n > 1 ? 's' : ''} vont recevoir cet email`
+        : 'Aucun abonné pour l\'instant';
+      if (n === 0) document.getElementById('nl-send-btn').disabled = true;
     });
+  }
+
+  // Déclencher la newsletter manuellement depuis la liste d'articles
+  async function sendNewsletterForArticle(id) {
+    const { data: a } = await db.from('articles').select('slug, titre, extrait').eq('id', id).single();
+    if (!a) { showToast('Impossible de charger l\'article.', false); return; }
+    const articleUrl = `https://tech-flair.com/article.html?slug=${a.slug}`;
+    showNewsletterPrompt(a.slug, a.titre, a.extrait, articleUrl, false);
   }
 
   async function sendNewsletter(slug, titre, extrait, articleUrl) {
@@ -1294,7 +1308,7 @@
           Lire l'article →
         </a>
         <hr style="border:none;border-top:1px solid #f3f4f6;margin:32px 0 16px;" />
-        <p style="font-size:12px;color:#9ca3af;">Tu reçois cet email car tu es abonné à TechFlair. <a href="https://tech-flair.com" style="color:#9ca3af;">Se désabonner</a></p>
+        <p style="font-size:12px;color:#9ca3af;">Tu reçois cet email car tu es abonné à TechFlair. <a href="https://tech-flair.com/unsubscribe.html?email=${encodeURIComponent(email)}" style="color:#9ca3af;">Se désabonner</a></p>
       </div>`;
 
     let sent = 0, failed = 0;
