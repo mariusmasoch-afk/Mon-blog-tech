@@ -1256,12 +1256,11 @@
         <p class="text-xs text-gray-400 mt-0.5" id="nl-count">Chargement des abonnés…</p>
       </div>
       <div class="flex gap-2 shrink-0">
-        <button onclick="sendNewsletter('${slug}', ${JSON.stringify(titre)}, ${JSON.stringify(extrait)}, '${articleUrl}')"
-          id="nl-send-btn"
+        <button id="nl-send-btn"
           class="px-4 py-2 rounded-xl bg-gray-900 text-white text-xs font-semibold hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
           Envoyer
         </button>
-        <button onclick="document.getElementById('newsletter-prompt').remove()"
+        <button id="nl-dismiss-btn"
           class="px-3 py-2 rounded-xl border border-gray-200 text-gray-500 text-xs hover:bg-gray-50 transition-colors">
           Ignorer
         </button>
@@ -1269,8 +1268,12 @@
     `;
     document.body.appendChild(prompt);
 
+    // Attacher les listeners proprement (évite les problèmes d'échappement dans onclick)
+    prompt.querySelector('#nl-send-btn').addEventListener('click', () => sendNewsletter(slug, titre, extrait, articleUrl));
+    prompt.querySelector('#nl-dismiss-btn').addEventListener('click', () => prompt.remove());
+
     // Compter les abonnés
-    db.from('abonnes').select('email', { count: 'exact', head: true }).then(({ count }) => {
+    db.from('abonnes').select('*', { count: 'exact', head: true }).then(({ count }) => {
       const n = count || 0;
       const el = document.getElementById('nl-count');
       if (!el) return;
@@ -1296,23 +1299,27 @@
     btn.disabled = true;
 
     const { data: abonnes } = await db.from('abonnes').select('email');
-    if (!abonnes || !abonnes.length) { showToast('Aucun abonné.', false); return; }
-
-    const htmlContent = `
-      <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;background:#fff;padding:32px;border-radius:16px;">
-        <p style="font-size:24px;font-weight:700;color:#111827;margin:0 0 8px;">Tech<span style="color:#0ea5e9;">Flair</span></p>
-        <hr style="border:none;border-top:1px solid #f3f4f6;margin:16px 0;" />
-        <h1 style="font-size:22px;font-weight:700;color:#111827;line-height:1.3;margin:0 0 12px;">${titre}</h1>
-        <p style="font-size:15px;color:#6b7280;line-height:1.7;margin:0 0 24px;">${extrait || ''}</p>
-        <a href="${articleUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:12px 24px;border-radius:12px;text-decoration:none;">
-          Lire l'article →
-        </a>
-        <hr style="border:none;border-top:1px solid #f3f4f6;margin:32px 0 16px;" />
-        <p style="font-size:12px;color:#9ca3af;">Tu reçois cet email car tu es abonné à TechFlair. <a href="https://tech-flair.com/unsubscribe.html?email=${encodeURIComponent(email)}" style="color:#9ca3af;">Se désabonner</a></p>
-      </div>`;
+    if (!abonnes || !abonnes.length) {
+      document.getElementById('newsletter-prompt')?.remove();
+      showToast('Aucun abonné pour l\'instant.', false);
+      return;
+    }
 
     let sent = 0, failed = 0;
     for (const { email } of abonnes) {
+      // htmlContent généré dans la boucle pour avoir email en scope (lien désabonnement)
+      const htmlContent = `
+        <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;background:#fff;padding:32px;border-radius:16px;">
+          <p style="font-size:24px;font-weight:700;color:#111827;margin:0 0 8px;">Tech<span style="color:#0ea5e9;">Flair</span></p>
+          <hr style="border:none;border-top:1px solid #f3f4f6;margin:16px 0;" />
+          <h1 style="font-size:22px;font-weight:700;color:#111827;line-height:1.3;margin:0 0 12px;">${titre}</h1>
+          <p style="font-size:15px;color:#6b7280;line-height:1.7;margin:0 0 24px;">${extrait || ''}</p>
+          <a href="${articleUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:12px 24px;border-radius:12px;text-decoration:none;">
+            Lire l'article →
+          </a>
+          <hr style="border:none;border-top:1px solid #f3f4f6;margin:32px 0 16px;" />
+          <p style="font-size:12px;color:#9ca3af;">Tu reçois cet email car tu es abonné à TechFlair. <a href="https://tech-flair.com/unsubscribe.html?email=${encodeURIComponent(email)}" style="color:#9ca3af;">Se désabonner</a></p>
+        </div>`;
       try {
         const res = await fetch('https://api.brevo.com/v3/smtp/email', {
           method: 'POST',
@@ -1320,7 +1327,7 @@
           body: JSON.stringify({
             sender:      { name: 'TechFlair', email: 'contact@tech-flair.com' },
             to:          [{ email }],
-            subject:     `Nouveau test : ${titre}`,
+            subject:     `Nouvel article TechFlair : ${titre}`,
             htmlContent,
           }),
         });
