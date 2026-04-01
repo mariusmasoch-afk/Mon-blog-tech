@@ -1184,6 +1184,47 @@
     if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addTag(); }
   }
 
+  // --- Auto-fill meta description depuis l'extrait ---
+  let metaEdited = false;
+
+  function autoFillMetaDesc() {
+    if (metaEdited) return;
+    const excerpt = document.getElementById('excerpt-input').innerText.trim();
+    const meta = document.getElementById('meta-desc');
+    meta.value = excerpt.slice(0, 160);
+    updateMetaCount();
+  }
+
+  // --- Auto-suggestion de tags depuis le titre + catégorie ---
+  const STOPWORDS = new Set(['le','la','les','de','du','des','un','une','et','en','au','aux','sur','par','pour','dans','avec','ce','se','est','sont','mon','ton','son','ma','ta','sa','notre','votre','leur','leurs','que','qui','dont','très','plus','mais','même','tout','tous','cette','cet','bien','aussi','comme','test','avis','après','avant']);
+
+  const CAT_TAGS = {
+    tests:     'Test & Avis',
+    gadgets:   'Gadgets',
+    logiciels: 'Apps & Logiciels',
+  };
+
+  function autoSuggestTags() {
+    if (tags.length > 0) return;
+    const title = document.getElementById('title-input').innerText.trim();
+    if (!title) return;
+    const cat = document.getElementById('cat-select').value;
+
+    const words = title.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length > 3 && !STOPWORDS.has(w));
+
+    const suggested = [...new Set(words)].slice(0, 3)
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1));
+
+    if (cat && CAT_TAGS[cat]) suggested.unshift(CAT_TAGS[cat]);
+
+    suggested.forEach(t => { if (!tags.includes(t)) tags.push(t); });
+    renderTags();
+  }
+
   // --- Meta description counter ---
   function updateMetaCount() {
     const len = document.getElementById('meta-desc').value.length;
