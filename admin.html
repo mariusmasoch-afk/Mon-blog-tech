@@ -860,7 +860,12 @@
     document.getElementById('editor-body').innerHTML   = a.contenu || '';
     document.getElementById('slug-input').value        = a.slug || '';
     document.getElementById('meta-desc').value         = a.meta_desc || '';
-    if (a.image_url) showCoverPreview(a.image_url);
+    if (a.image_url) {
+      showCoverPreview(a.image_url);
+      coverStorageUrl = a.image_url.startsWith('http') ? a.image_url : null;
+    } else {
+      coverStorageUrl = null;
+    }
 
     // Catégorie
     const sel = document.getElementById('cat-select');
@@ -1017,11 +1022,29 @@
   }
 
   // --- Cover image ---
-  function previewCover(input) {
+  let coverStorageUrl = null; // vraie URL https:// après upload Supabase Storage
+
+  async function previewCover(input) {
     if (!input.files[0]) return;
+    const file = input.files[0];
+    // Aperçu local immédiat
     const reader = new FileReader();
     reader.onload = e => showCoverPreview(e.target.result);
-    reader.readAsDataURL(input.files[0]);
+    reader.readAsDataURL(file);
+    // Upload vers Supabase Storage
+    await uploadCoverToStorage(file);
+  }
+
+  async function uploadCoverToStorage(file) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    const path = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await db.storage.from('images').upload(path, file, { upsert: true });
+    if (error) { console.error('Erreur upload Storage:', error.message); return; }
+    const { data } = db.storage.from('images').getPublicUrl(path);
+    coverStorageUrl = data.publicUrl;
+    // Remplacer l'aperçu base64 par la vraie URL
+    document.getElementById('cover-preview').src = coverStorageUrl;
+    console.log('[Cover] URL Storage:', coverStorageUrl);
   }
 
   function showCoverPreview(src) {
@@ -1040,6 +1063,7 @@
     document.getElementById('drop-placeholder').classList.remove('hidden');
     document.getElementById('remove-cover-btn').classList.add('hidden');
     document.getElementById('cover-input').value = '';
+    coverStorageUrl = null;
   }
 
   function handleDragOver(e) {
@@ -1057,6 +1081,7 @@
       const reader = new FileReader();
       reader.onload = ev => showCoverPreview(ev.target.result);
       reader.readAsDataURL(file);
+      uploadCoverToStorage(file);
     }
   }
 
@@ -1123,11 +1148,10 @@
     const redacteur_id = uuidRegex.test(redacteurVal) ? redacteurVal : null;
 
     const coverEl = document.getElementById('cover-preview');
-    // image_url = src uniquement si l'image est visible (sinon le browser retourne l'URL de la page)
-    const image_url = (!coverEl.classList.contains('hidden') && coverEl.src
-      && !coverEl.src.endsWith('admin.html') && !coverEl.src.endsWith('/'))
-      ? coverEl.src
-      : null;
+    const coverVisible = !coverEl.classList.contains('hidden') && coverEl.src
+      && !coverEl.src.endsWith('admin.html') && !coverEl.src.endsWith('/');
+    // Priorité : URL Supabase Storage (https://) > src de l'aperçu (peut être base64)
+    const image_url = coverVisible ? (coverStorageUrl || coverEl.src) : null;
     return {
       titre:         document.getElementById('title-input').innerText.trim(),
       extrait:       document.getElementById('excerpt-input').innerText.trim(),
