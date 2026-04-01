@@ -1116,10 +1116,15 @@
 
   // --- Collecte les données du formulaire ---
   function collectFormData(statut) {
-    const redacteurVal = document.getElementById('redacteur-select').value;
+    const redacteurVal = (document.getElementById('redacteur-select').value || '').trim();
+    // Valider que c'est bien un UUID v4 (format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const redacteur_id = uuidRegex.test(redacteurVal) ? redacteurVal : null;
+
     const coverEl = document.getElementById('cover-preview');
     // image_url = src uniquement si l'image est visible (sinon le browser retourne l'URL de la page)
-    const image_url = (!coverEl.classList.contains('hidden') && coverEl.src && !coverEl.src.endsWith('admin.html'))
+    const image_url = (!coverEl.classList.contains('hidden') && coverEl.src
+      && !coverEl.src.endsWith('admin.html') && !coverEl.src.endsWith('/'))
       ? coverEl.src
       : null;
     return {
@@ -1132,7 +1137,7 @@
       image_url,
       statut,
       temps_lecture: parseInt(document.getElementById('read-time').textContent) || null,
-      redacteur_id:  (redacteurVal && redacteurVal.trim().length > 10) ? redacteurVal.trim() : null,
+      redacteur_id,
     };
   }
 
@@ -1167,6 +1172,9 @@
     if (!data.slug)  { showToast('Ajoutez un slug avant de publier.', false); return; }
 
     const isUpdate = !!currentEditId;
+    console.log('[Publish] isUpdate:', isUpdate, '| currentEditId:', currentEditId);
+    console.log('[Publish] data:', JSON.stringify({ ...data, contenu: '...' }));
+
     let error;
     if (isUpdate) {
       ({ error } = await db.from('articles').update(data).eq('id', currentEditId));
@@ -1175,8 +1183,8 @@
     }
 
     if (error) {
-      console.error('Erreur publication:', error);
-      showToast('Erreur : ' + error.message, false);
+      console.error('[Publish] Erreur:', error.message, '| code:', error.code, '| details:', error.details, '| hint:', error.hint);
+      showToast('Erreur : ' + (error.message || JSON.stringify(error)), false);
       return;
     }
 
