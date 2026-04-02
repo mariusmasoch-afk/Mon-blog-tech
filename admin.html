@@ -444,6 +444,9 @@
             class="prose prose-gray max-w-none text-base text-gray-700 leading-relaxed focus:outline-none"
             style="min-height: 400px; white-space: pre-wrap;"
             oninput="updateWordCount(); updateSaveStatus()"
+            ondragover="event.preventDefault()"
+            ondrop="handleEditorDrop(event)"
+            onpaste="handleEditorPaste(event)"
           ></div>
 
         </div>
