@@ -29,13 +29,28 @@
     .article-card { transition: transform .2s ease, box-shadow .2s ease; }
     .article-card:hover { transform:translateY(-4px); box-shadow:0 12px 28px rgba(0,0,0,.08); }
   </style>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-39RE8T7LE5"></script>
+  <!-- Google Analytics + Consent Mode (CNIL) -->
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-39RE8T7LE5');
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied' });
+    if (localStorage.getItem('tf_cookie_consent') === 'accepted') {
+      gtag('consent', 'update', { analytics_storage: 'granted' });
+    }
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-39RE8T7LE5"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-39RE8T7LE5');</script>
+  <script>
+    (function() {
+      const cat = new URLSearchParams(location.search).get('cat') || '';
+      const cats = { tests: 'Tests & Avis', gadgets: 'Gadgets', logiciels: 'Apps et logiciels' };
+      const label = cats[cat] || 'TechFlair';
+      const url = 'https://tech-flair.com/categorie.html?cat=' + cat;
+      const c = document.createElement('link'); c.rel = 'canonical'; c.href = url; document.head.appendChild(c);
+      [['og:type','website'],['og:title',label+' — TechFlair'],['og:description','Retrouvez tous nos articles '+label+' sur TechFlair.'],['og:url',url]].forEach(function(p){
+        const m = document.createElement('meta'); m.setAttribute('property',p[0]); m.content = p[1]; document.head.appendChild(m);
+      });
+    })();
   </script>
 </head>
 <body class="bg-white text-gray-900 font-sans antialiased">
