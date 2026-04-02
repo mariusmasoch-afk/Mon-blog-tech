@@ -1223,15 +1223,61 @@
   // --- Cover image ---
   let coverStorageUrl = null; // vraie URL https:// après upload Supabase Storage
 
-  async function previewCover(input) {
+  let cropper = null;
+  let cropFile = null;
+
+  function previewCover(input) {
     if (!input.files[0]) return;
-    const file = input.files[0];
-    // Aperçu local immédiat
+    cropFile = input.files[0];
     const reader = new FileReader();
-    reader.onload = e => showCoverPreview(e.target.result);
-    reader.readAsDataURL(file);
-    // Upload vers Supabase Storage
-    await uploadCoverToStorage(file);
+    reader.onload = e => openCropModal(e.target.result);
+    reader.readAsDataURL(cropFile);
+    input.value = '';
+  }
+
+  function openCropModal(src) {
+    const modal = document.getElementById('crop-modal');
+    const img = document.getElementById('crop-image');
+    img.src = src;
+    modal.classList.remove('hidden');
+    // Attendre que l'image soit rendue
+    setTimeout(() => {
+      if (cropper) { cropper.destroy(); cropper = null; }
+      cropper = new Cropper(img, { aspectRatio: 16/9, viewMode: 1, autoCropArea: 1, movable: true, zoomable: true, rotatable: false });
+    }, 100);
+  }
+
+  function setCropRatio(ratio) {
+    if (cropper) cropper.setAspectRatio(ratio);
+  }
+
+  function cancelCrop() {
+    if (cropper) { cropper.destroy(); cropper = null; }
+    document.getElementById('crop-modal').classList.add('hidden');
+    cropFile = null;
+  }
+
+  async function applyCrop() {
+    if (!cropper) return;
+    const canvas = cropper.getCroppedCanvas({ maxWidth: 1920, maxHeight: 1080, imageSmoothingQuality: 'high' });
+    cropper.destroy(); cropper = null;
+    document.getElementById('crop-modal').classList.add('hidden');
+
+    // Aperçu immédiat
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    showCoverPreview(dataUrl);
+
+    // Convertir en Blob et uploader
+    canvas.toBlob(async blob => {
+      const ext = 'jpg';
+      const path = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await db.storage.from('images').upload(path, blob, { upsert: true, contentType: 'image/jpeg' });
+      if (error) { showToast('Erreur upload : ' + error.message, false); return; }
+      const { data } = db.storage.from('images').getPublicUrl(path);
+      coverStorageUrl = data.publicUrl;
+      document.getElementById('cover-preview').src = coverStorageUrl;
+      showToast('Image de couverture enregistrée');
+    }, 'image/jpeg', 0.92);
   }
 
   async function uploadCoverToStorage(file) {
