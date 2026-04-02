@@ -1050,14 +1050,28 @@
     document.execCommand('insertHTML', false, html);
   }
 
-  function insertInlineImage(input) {
+  async function insertInlineImage(input) {
     if (!input.files[0]) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      document.execCommand('insertHTML', false,
-        `<img src="${e.target.result}" class="rounded-xl my-4 max-w-full" alt="Image article" /><p><br></p>`);
-    };
-    reader.readAsDataURL(input.files[0]);
+    const file = input.files[0];
+    showToast('Upload de l\'image en cours…');
+
+    const ext = file.name.split('.').pop().toLowerCase();
+    const path = `content/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await db.storage.from('images').upload(path, file, { upsert: true });
+    if (error) { showToast('Erreur upload image : ' + error.message, false); return; }
+    const { data } = db.storage.from('images').getPublicUrl(path);
+
+    const editor = document.getElementById('editor-body');
+    const img = document.createElement('img');
+    img.src = data.publicUrl;
+    img.className = 'rounded-xl my-4 max-w-full';
+    img.alt = 'Image article';
+    const p = document.createElement('p');
+    p.innerHTML = '<br>';
+    editor.appendChild(img);
+    editor.appendChild(p);
+    input.value = '';
+    showToast('Image insérée');
   }
 
   // --- Word count & read time ---
