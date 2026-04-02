@@ -1149,44 +1149,16 @@
   async function insertInlineImage(input) {
     if (!input.files[0]) return;
     const file = input.files[0];
-
     const editor = document.getElementById('editor-body');
-    // Utiliser la position sauvegardée avant l'ouverture du dialog
     let range = savedRange;
     if (!range) {
       range = document.createRange();
       range.selectNodeContents(editor);
       range.collapse(false);
     }
-
-    // Insérer un placeholder pendant l'upload
-    const placeholder = document.createElement('span');
-    placeholder.id = 'img-placeholder-' + Date.now();
-    placeholder.style.cssText = 'display:inline-block;background:#f3f4f6;border-radius:.5rem;padding:.5rem 1.5rem;color:#9ca3af;font-size:.8rem;margin:.5rem 0;';
-    placeholder.textContent = '⏳ Chargement de l\'image…';
-    range.deleteContents();
-    range.insertNode(placeholder);
-
-    // Upload vers Supabase Storage
-    const ext = file.name.split('.').pop().toLowerCase().replace('jpeg','jpg');
-    const path = `content/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await db.storage.from('images').upload(path, file, { upsert: true });
-
-    if (error) {
-      placeholder.remove();
-      showToast('Erreur upload : ' + error.message, false);
-      input.value = '';
-      return;
-    }
-
-    const { data } = db.storage.from('images').getPublicUrl(path);
-    const img = document.createElement('img');
-    img.src = data.publicUrl;
-    img.className = 'rounded-xl my-4 max-w-full';
-    img.alt = file.name.replace(/\.[^.]+$/, '');
-    placeholder.replaceWith(img);
+    await uploadAndInsertImage(file, range);
     input.value = '';
-    showToast('Image insérée');
+    savedRange = null;
   }
 
   // --- Word count & read time ---
