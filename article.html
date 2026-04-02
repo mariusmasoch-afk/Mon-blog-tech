@@ -214,6 +214,47 @@
       document.title = `${a.titre} — TechFlair`;
       document.getElementById('meta-desc').setAttribute('content', a.extrait || '');
 
+      // Canonical
+      let canonical = document.querySelector('link[rel="canonical"]');
+      if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
+      canonical.href = `https://tech-flair.com/article.html?slug=${a.slug}`;
+
+      // Open Graph
+      const ogMetas = {
+        'og:type':        'article',
+        'og:title':       `${a.titre} — TechFlair`,
+        'og:description': a.extrait || '',
+        'og:url':         `https://tech-flair.com/article.html?slug=${a.slug}`,
+        'og:image':       a.image_url || 'https://tech-flair.com/og-cover.jpg',
+        'article:published_time': a.date_creation,
+        'article:modified_time':  a.date_modification || a.date_creation,
+        'article:section':        a.categorie || '',
+      };
+      Object.entries(ogMetas).forEach(([prop, content]) => {
+        let m = document.querySelector(`meta[property="${prop}"]`);
+        if (!m) { m = document.createElement('meta'); m.setAttribute('property', prop); document.head.appendChild(m); }
+        m.content = content;
+      });
+
+      // Schema.org JSON-LD
+      const author = a.redacteurs ? { '@type': 'Person', name: `${a.redacteurs.prenom} ${a.redacteurs.nom}` } : { '@type': 'Organization', name: 'TechFlair' };
+      const schema = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: a.titre,
+        description: a.extrait || '',
+        image: a.image_url || 'https://tech-flair.com/og-cover.jpg',
+        datePublished: a.date_creation,
+        dateModified: a.date_modification || a.date_creation,
+        author,
+        publisher: { '@type': 'Organization', name: 'TechFlair', logo: { '@type': 'ImageObject', url: 'https://tech-flair.com/favicon.svg' } },
+        url: `https://tech-flair.com/article.html?slug=${a.slug}`,
+        mainEntityOfPage: `https://tech-flair.com/article.html?slug=${a.slug}`,
+      };
+      let ld = document.getElementById('schema-ld');
+      if (!ld) { ld = document.createElement('script'); ld.id = 'schema-ld'; ld.type = 'application/ld+json'; document.head.appendChild(ld); }
+      ld.textContent = JSON.stringify(schema);
+
       // Image de couverture
       const coverHTML = a.image_url
         ? `<div class="w-full h-64 sm:h-80 rounded-2xl overflow-hidden mb-10 bg-gray-100">
