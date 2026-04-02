@@ -50,14 +50,17 @@
     .skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size:200% 100%; animation: shimmer 1.4s infinite; border-radius:.5rem; }
     @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
   </style>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-39RE8T7LE5"></script>
+  <!-- Google Analytics + Consent Mode (CNIL) -->
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-39RE8T7LE5');
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', { analytics_storage: 'denied' });
+    if (localStorage.getItem('tf_cookie_consent') === 'accepted') {
+      gtag('consent', 'update', { analytics_storage: 'granted' });
+    }
   </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-39RE8T7LE5"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-39RE8T7LE5');</script>
 </head>
 <body class="bg-white text-gray-900 font-sans antialiased">
 
