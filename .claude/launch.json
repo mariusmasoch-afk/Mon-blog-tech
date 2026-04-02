@@ -4,7 +4,7 @@
     {
       "name": "Static HTML Server",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8080"],
+      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "/Users/marius0910/Documents/claude code/Techflair"],
       "port": 8080
     }
   ]
