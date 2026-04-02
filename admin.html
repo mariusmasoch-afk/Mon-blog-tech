@@ -763,6 +763,34 @@
 </div>
 
 <!-- ============================================================
+  MODALE RECADRAGE COUVERTURE
+=============================================================== -->
+<div id="crop-modal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+      <div>
+        <p class="font-semibold text-gray-900 text-sm">Recadrer l'image de couverture</p>
+        <p class="text-xs text-gray-400 mt-0.5">Format 16:9 recommandé</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="cancelCrop()" class="px-4 py-2 rounded-xl border border-gray-200 text-sm text-gray-500 hover:bg-gray-50 transition-colors">Annuler</button>
+        <button onclick="applyCrop()" class="px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-gray-700 transition-colors">Appliquer</button>
+      </div>
+    </div>
+    <div class="p-4 bg-gray-950" style="max-height:60vh;overflow:hidden;">
+      <img id="crop-image" src="" alt="" style="max-width:100%;display:block;" />
+    </div>
+    <div class="flex items-center gap-3 px-5 py-3 border-t border-gray-100 text-xs text-gray-400">
+      <span>Ratio :</span>
+      <button onclick="setCropRatio(16/9)" class="px-2 py-1 rounded bg-gray-100 hover:bg-brand-100 hover:text-brand-700 transition-colors font-medium">16:9</button>
+      <button onclick="setCropRatio(4/3)" class="px-2 py-1 rounded bg-gray-100 hover:bg-brand-100 hover:text-brand-700 transition-colors font-medium">4:3</button>
+      <button onclick="setCropRatio(1)" class="px-2 py-1 rounded bg-gray-100 hover:bg-brand-100 hover:text-brand-700 transition-colors font-medium">1:1</button>
+      <button onclick="setCropRatio(NaN)" class="px-2 py-1 rounded bg-gray-100 hover:bg-brand-100 hover:text-brand-700 transition-colors font-medium">Libre</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
   TOAST NOTIFICATION
 =============================================================== -->
 <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 translate-y-2">
