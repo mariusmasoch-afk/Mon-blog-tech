@@ -1071,13 +1071,10 @@
     if (!input.files[0]) return;
     const file = input.files[0];
 
-    // Sauvegarder la position du curseur
     const editor = document.getElementById('editor-body');
-    editor.focus();
-    const sel = window.getSelection();
-    let range = sel && sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
-    if (!range || !editor.contains(range.commonAncestorContainer)) {
-      // Curseur hors de l'éditeur : on insère à la fin
+    // Utiliser la position sauvegardée avant l'ouverture du dialog
+    let range = savedRange;
+    if (!range) {
       range = document.createRange();
       range.selectNodeContents(editor);
       range.collapse(false);
