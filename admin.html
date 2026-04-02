@@ -1050,6 +1050,23 @@
     document.execCommand('insertHTML', false, html);
   }
 
+  let savedRange = null;
+
+  function prepareImageInsert() {
+    // Sauvegarder la position du curseur AVANT que le dialog vole le focus
+    const sel = window.getSelection();
+    const editor = document.getElementById('editor-body');
+    if (sel && sel.rangeCount > 0 && editor.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+      savedRange = sel.getRangeAt(0).cloneRange();
+    } else {
+      // Pas de curseur dans l'éditeur : on crée un range à la fin
+      savedRange = document.createRange();
+      savedRange.selectNodeContents(editor);
+      savedRange.collapse(false);
+    }
+    document.getElementById('inline-img-input').click();
+  }
+
   async function insertInlineImage(input) {
     if (!input.files[0]) return;
     const file = input.files[0];
