@@ -1053,6 +1053,82 @@
     document.execCommand('insertHTML', false, html);
   }
 
+  // --- Upload image et insertion à la position du curseur ---
+  async function uploadAndInsertImage(file, range) {
+    if (!file || !file.type.startsWith('image/')) return;
+
+    const editor = document.getElementById('editor-body');
+
+    // Restaurer le range et insérer le placeholder
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    const placeholder = document.createElement('span');
+    placeholder.style.cssText = 'display:inline-block;background:#f3f4f6;border-radius:.5rem;padding:.4rem 1rem;color:#9ca3af;font-size:.8rem;margin:.5rem 0;';
+    placeholder.textContent = '⏳ Upload…';
+    range.deleteContents();
+    range.insertNode(placeholder);
+
+    // Upload Supabase
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace('jpeg','jpg');
+    const path = `content/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await db.storage.from('images').upload(path, file, { upsert: true });
+    if (error) { placeholder.remove(); showToast('Erreur upload : ' + error.message, false); return; }
+
+    const { data } = db.storage.from('images').getPublicUrl(path);
+    const img = document.createElement('img');
+    img.src = data.publicUrl;
+    img.className = 'rounded-xl my-4 max-w-full';
+    img.alt = file.name.replace(/\.[^.]+$/, '');
+    placeholder.replaceWith(img);
+    // Placer le curseur après l'image
+    const newRange = document.createRange();
+    newRange.setStartAfter(img);
+    newRange.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+    showToast('Image insérée');
+    updateWordCount();
+  }
+
+  function handleEditorDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const file = e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    // Obtenir la position du drop
+    let range;
+    if (document.caretRangeFromPoint) {
+      range = document.caretRangeFromPoint(e.clientX, e.clientY);
+    } else if (document.caretPositionFromPoint) {
+      const pos = document.caretPositionFromPoint(e.clientX, e.clientY);
+      range = document.createRange();
+      range.setStart(pos.offsetNode, pos.offset);
+      range.collapse(true);
+    } else {
+      range = document.createRange();
+      range.selectNodeContents(document.getElementById('editor-body'));
+      range.collapse(false);
+    }
+    uploadAndInsertImage(file, range);
+  }
+
+  function handleEditorPaste(e) {
+    const items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        const sel = window.getSelection();
+        const range = sel && sel.rangeCount > 0 ? sel.getRangeAt(0).cloneRange() : null;
+        if (range) uploadAndInsertImage(file, range);
+        return;
+      }
+    }
+  }
+
   let savedRange = null;
 
   function prepareImageInsert() {
