@@ -1878,10 +1878,12 @@
   async function editRedacteur(id) {
     const { data: r, error } = await db.from('redacteurs').select('*').eq('id', id).single();
     if (error || !r) { showToast('Impossible de charger le rédacteur.', false); return; }
-    document.getElementById('redacteur-edit-id').value = r.id;
-    document.getElementById('redacteur-prenom').value  = r.prenom;
-    document.getElementById('redacteur-nom').value     = r.nom;
-    document.getElementById('redacteur-bio').value     = r.bio || '';
+    document.getElementById('redacteur-edit-id').value    = r.id;
+    document.getElementById('redacteur-prenom').value     = r.prenom;
+    document.getElementById('redacteur-nom').value        = r.nom;
+    document.getElementById('redacteur-bio').value        = r.bio || '';
+    document.getElementById('redacteur-specialite').value = r.specialite || '';
+    document.getElementById('redacteur-linkedin').value   = r.linkedin_url || '';
     removeRedacteurPhoto();
     if (r.photo_url) setRedacteurPhotoPreview(r.photo_url);
     document.getElementById('redacteur-form-title').textContent = 'Modifier le rédacteur';
