@@ -198,7 +198,7 @@
     async function fetchAndCache(slug, cacheKey, silent) {
       const { data: rows, error } = await db
         .from('articles')
-        .select('*, redacteurs(prenom, nom, photo_url, bio)')
+        .select('*, redacteurs(prenom, nom, photo_url, bio, specialite, linkedin_url)')
         .eq('slug', slug)
         .eq('statut', 'publié')
         .limit(1);
