@@ -1804,10 +1804,12 @@
     const isHidden = wrapper.classList.contains('hidden');
     if (show === false || !isHidden) {
       wrapper.classList.add('hidden');
-      document.getElementById('redacteur-edit-id').value = '';
-      document.getElementById('redacteur-prenom').value  = '';
-      document.getElementById('redacteur-nom').value     = '';
-      document.getElementById('redacteur-bio').value     = '';
+      document.getElementById('redacteur-edit-id').value    = '';
+      document.getElementById('redacteur-prenom').value     = '';
+      document.getElementById('redacteur-nom').value        = '';
+      document.getElementById('redacteur-bio').value        = '';
+      document.getElementById('redacteur-specialite').value = '';
+      document.getElementById('redacteur-linkedin').value   = '';
       removeRedacteurPhoto();
       document.getElementById('redacteur-form-title').textContent = 'Nouveau rédacteur';
     } else {
