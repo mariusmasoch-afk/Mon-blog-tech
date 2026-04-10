@@ -305,6 +305,7 @@
         <!-- Métadonnées -->
         <div class="flex items-center gap-4 text-sm text-gray-400 mb-8 flex-wrap">
           <span>${date}</span>
+          ${updated ? `<span class="text-xs text-brand-500 font-medium bg-brand-50 px-2 py-0.5 rounded-full">Mis à jour le ${updated}</span>` : ''}
           ${mins ? `<span>·</span><span>${mins}</span>` : ''}
           ${a.redacteurs ? `
           <span>·</span>
