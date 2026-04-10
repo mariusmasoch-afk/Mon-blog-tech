@@ -1860,7 +1860,9 @@
 
     if (!prenom || !nom) { showToast('Prénom et nom obligatoires.', false); return; }
 
-    const payload = { prenom, nom, photo_url: photo || null, bio: bio || null };
+    const specialite   = document.getElementById('redacteur-specialite').value.trim();
+    const linkedin_url = document.getElementById('redacteur-linkedin').value.trim();
+    const payload = { prenom, nom, photo_url: photo || null, bio: bio || null, specialite: specialite || null, linkedin_url: linkedin_url || null };
     let error;
     if (id) {
       ({ error } = await db.from('redacteurs').update(payload).eq('id', id));
