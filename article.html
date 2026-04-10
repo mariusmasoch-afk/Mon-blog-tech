@@ -216,6 +216,9 @@
       const style = CAT_STYLES[a.categorie] || { badge:'bg-gray-100 text-gray-600', label: a.categorie || '' };
       const date  = new Date(a.date_creation).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
       const mins  = a.temps_lecture ? `${a.temps_lecture} min de lecture` : '';
+      const updated = a.date_modification && (new Date(a.date_modification) - new Date(a.date_creation) > 86400000)
+        ? new Date(a.date_modification).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' })
+        : null;
 
       // Mettre à jour le <title> et la meta description
       document.title = `${a.titre} — TechFlair`;
