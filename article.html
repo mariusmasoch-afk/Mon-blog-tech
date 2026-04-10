@@ -366,6 +366,62 @@
       loadRelatedArticles(a.categorie, a.slug);
     }
 
+    async function loadRelatedArticles(categorie, currentSlug) {
+      const container = document.getElementById('related-articles-container');
+      if (!container || !categorie) return;
+
+      const { data } = await db
+        .from('articles')
+        .select('titre, slug, image_url, date_creation')
+        .eq('categorie', categorie)
+        .eq('statut', 'publié')
+        .neq('slug', currentSlug)
+        .order('date_creation', { ascending: false })
+        .limit(3);
+
+      if (!data || !data.length) return;
+
+      container.innerHTML = `
+        <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-5">Dans la même catégorie</p>
+        <div class="grid sm:grid-cols-3 gap-5">
+          ${data.map(a => `
+            <a href="article.html?slug=${a.slug}" class="related-card group block">
+              <div class="w-full h-32 rounded-xl overflow-hidden mb-3 bg-gray-100">
+                ${a.image_url
+                  ? `<img src="${a.image_url}" alt="${a.titre}" class="w-full h-full object-cover" />`
+                  : ''}
+              </div>
+              <p class="text-sm font-semibold text-gray-900 leading-snug group-hover:text-brand-600 transition-colors line-clamp-2">${a.titre}</p>
+              <p class="text-xs text-gray-400 mt-1">${new Date(a.date_creation).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' })}</p>
+            </a>
+          `).join('')}
+        </div>`;
+    }
+
+    function generateFaqSchema() {
+      const items = document.querySelectorAll('#article-content .faq-item');
+      if (!items.length) return;
+
+      const mainEntity = [];
+      items.forEach(item => {
+        const q = item.querySelector('.faq-question');
+        const a = item.querySelector('.faq-answer');
+        if (q && a) {
+          mainEntity.push({
+            '@type': 'Question',
+            name: q.textContent.trim(),
+            acceptedAnswer: { '@type': 'Answer', text: a.textContent.trim() }
+          });
+        }
+      });
+
+      if (!mainEntity.length) return;
+
+      let ld = document.getElementById('schema-faq-ld');
+      if (!ld) { ld = document.createElement('script'); ld.id = 'schema-faq-ld'; ld.type = 'application/ld+json'; document.head.appendChild(ld); }
+      ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity });
+    }
+
     function showError() {
       document.getElementById('skeleton').classList.add('hidden');
       document.getElementById('article-error').classList.remove('hidden');
