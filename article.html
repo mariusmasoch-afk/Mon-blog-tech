@@ -360,6 +360,10 @@
       // Afficher le contenu, masquer le skeleton
       document.getElementById('skeleton').classList.add('hidden');
       document.getElementById('article-content').classList.remove('hidden');
+
+      // SEO & maillage
+      generateFaqSchema();
+      loadRelatedArticles(a.categorie, a.slug);
     }
 
     function showError() {
