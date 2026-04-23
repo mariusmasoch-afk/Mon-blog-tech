@@ -166,6 +166,12 @@
       'logiciels':  { bg:'from-rose-50 to-pink-100',       tag:'bg-rose-100 text-rose-700' },
     };
 
+    const CAT_BANNERS = {
+      tests:     '/banner-tests.png',
+      gadgets:   '/banner-gadgets.png',
+      logiciels: '/banner-logiciels.png',
+    };
+
     const params = new URLSearchParams(window.location.search);
     const cat = params.get('cat') || 'tests';
     const meta = CAT_META[cat] || CAT_META['gadgets'];
@@ -173,8 +179,15 @@
     // Mise à jour du head
     document.title = `TechFlair — ${meta.label}`;
 
+    // Bannière image
+    const bannerImg = document.getElementById('cat-banner-img');
+    if (bannerImg && CAT_BANNERS[cat]) {
+      bannerImg.src = CAT_BANNERS[cat];
+      bannerImg.alt = meta.label;
+    }
+
     // En-tête de rubrique
-    document.getElementById('cat-badge').className = `inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-4 ${meta.badge}`;
+    document.getElementById('cat-badge').className = `inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-3 w-fit ${meta.badge}`;
     document.getElementById('cat-badge').textContent = meta.emoji + '  ' + meta.label;
     document.getElementById('cat-title').textContent = meta.label;
     document.getElementById('cat-desc').textContent  = meta.desc;
