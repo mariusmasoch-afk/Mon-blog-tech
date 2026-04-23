@@ -197,7 +197,7 @@
         const date = new Date(a.date_creation).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
         const mins = a.temps_lecture ? `${a.temps_lecture} min` : '';
         return `
-          <article class="article-card flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+          <article class="article-card reveal flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
             ${img}
             <div class="flex flex-col flex-1 p-5 space-y-3">
               <div class="flex items-center gap-2">
