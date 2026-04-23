@@ -56,6 +56,18 @@
     /* Articles similaires */
     .related-card img { transition: transform .3s ease; }
     .related-card:hover img { transform: scale(1.05); }
+    /* Animations */
+    .reveal { opacity:0; transform:translateY(18px); transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1); }
+    .reveal.is-visible { opacity:1; transform:none; }
+    .reveal:nth-child(2) { transition-delay:.08s; }
+    .reveal:nth-child(3) { transition-delay:.16s; }
+    header { transition: box-shadow .3s ease; }
+    .header-scrolled { box-shadow: 0 2px 20px rgba(0,0,0,.07) !important; }
+    #article-content { animation: pageFadeIn .45s ease both; }
+    @keyframes pageFadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, header, #article-content { transition:none !important; animation:none !important; opacity:1 !important; transform:none !important; }
+    }
     /* Skeleton */
     .skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size:200% 100%; animation: shimmer 1.4s infinite; border-radius:.5rem; }
     @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
