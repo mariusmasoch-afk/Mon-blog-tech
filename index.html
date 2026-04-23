@@ -86,11 +86,35 @@
     }
     .nav-link:hover::after { width: 100%; }
 
-    /* Card hover lift */
+    /* Card hover lift + image zoom */
     .article-card { transition: transform .2s ease, box-shadow .2s ease; }
-    .article-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 28px rgba(0,0,0,.08);
+    .article-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
+    .article-card img { transition: transform .45s cubic-bezier(.22,1,.36,1); }
+    .article-card:hover img { transform: scale(1.06); }
+
+    /* Scroll reveal */
+    .reveal { opacity:0; transform:translateY(18px); transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1); }
+    .reveal.is-visible { opacity:1; transform:none; }
+    .reveal:nth-child(2) { transition-delay:.08s; }
+    .reveal:nth-child(3) { transition-delay:.16s; }
+    .reveal:nth-child(4) { transition-delay:.24s; }
+    .reveal:nth-child(5) { transition-delay:.32s; }
+    .reveal:nth-child(6) { transition-delay:.40s; }
+
+    /* Header scroll */
+    header { transition: box-shadow .3s ease; }
+    .header-scrolled { box-shadow: 0 2px 20px rgba(0,0,0,.07) !important; }
+
+    /* Page entry */
+    main { animation: pageFadeIn .45s ease both; }
+    @keyframes pageFadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+    /* Bouton press */
+    button:active, a.btn:active { transform: scale(.97); }
+
+    /* Respect prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .article-card, .article-card img, header, main { transition:none !important; animation:none !important; opacity:1 !important; transform:none !important; }
     }
 
     /* Search overlay */
