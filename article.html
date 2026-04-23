@@ -397,7 +397,7 @@
         <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-5">Dans la même catégorie</p>
         <div class="grid sm:grid-cols-3 gap-5">
           ${data.map(a => `
-            <a href="article.html?slug=${a.slug}" class="related-card group block">
+            <a href="article.html?slug=${a.slug}" class="related-card reveal group block">
               <div class="w-full h-32 rounded-xl overflow-hidden mb-3 bg-gray-100">
                 ${a.image_url
                   ? `<img src="${a.image_url}" alt="${a.titre}" class="w-full h-full object-cover" />`
