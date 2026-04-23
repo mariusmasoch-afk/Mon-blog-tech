@@ -428,6 +428,7 @@
     }
 
     grid.innerHTML = data.map(buildCard).join('');
+    window.revealAll && window.revealAll();
   }
 
   // ============================================================
