@@ -233,7 +233,7 @@
                 <a href="article.html?slug=${a.slug||a.id}">${a.titre}</a>
               </h2>
               <p class="text-sm text-gray-500 leading-relaxed flex-1">${a.extrait||''}</p>
-              <a href="article.html?slug=${a.slug||a.id}" class="inline-flex items-center text-sm font-medium text-brand-600 gap-1">Lire <span>→</span></a>
+              <a href="article.html?slug=${a.slug||a.id}" class="read-btn">Lire <span>→</span></a>
             </div>
           </article>`;
       }).join('');
