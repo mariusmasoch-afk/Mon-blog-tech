@@ -86,6 +86,17 @@
     }
     .nav-link:hover::after { width: 100%; }
 
+    /* Bouton "Lire" sur survol card */
+    .article-card .read-btn {
+      display: inline-flex; align-items: center; gap: .25rem;
+      font-size: .875rem; font-weight: 500; color: #0284c7;
+      padding: .3rem .65rem; border-radius: .5rem; margin-left: -.65rem;
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+    }
+    .article-card:hover .read-btn {
+      background: #111827; color: #fff; transform: translateX(3px);
+    }
+
     /* Card hover lift + image zoom */
     .article-card { transition: transform .2s ease, box-shadow .2s ease; }
     .article-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
