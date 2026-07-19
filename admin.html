@@ -978,7 +978,8 @@
     const { error } = await db.from('articles').update({ is_carousel: !isCurrently }).eq('id', id);
     if (error) { showToast('Erreur : ' + error.message, false); return; }
     showToast(isCurrently ? 'Retiré du carrousel' : '⭐ Ajouté au carrousel !');
-    loadArticlesTable();
+    await new Promise(r => setTimeout(r, 300));
+    await loadArticlesTable();
   }
 
   let currentEditId = null;
