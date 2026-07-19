@@ -231,23 +231,34 @@
   <main>
 
     <!-- ============================================================
-      HERO — Article à la une (100% dynamique via Supabase)
+      HERO — Carrousel plein-écran (dynamique via Supabase)
     =============================================================== -->
-    <section aria-labelledby="hero-title" class="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20">
-      <div id="hero-grid" class="grid md:grid-cols-2 gap-10 items-center">
+    <section id="hero-carousel" aria-label="Articles à la une"
+      class="relative w-full overflow-hidden bg-gray-900"
+      style="height:78vh;max-height:700px;min-height:380px;">
 
-        <!-- Skeleton hero (affiché pendant le chargement) -->
-        <div class="space-y-5">
-          <div class="skeleton h-6 w-40 rounded-full"></div>
-          <div class="skeleton h-12 w-full rounded-xl"></div>
-          <div class="skeleton h-12 w-4/5 rounded-xl"></div>
-          <div class="skeleton h-5 w-full rounded"></div>
-          <div class="skeleton h-5 w-3/4 rounded"></div>
-          <div class="skeleton h-10 w-36 rounded-xl mt-2"></div>
-        </div>
-        <div class="skeleton rounded-2xl aspect-[4/3]"></div>
-
+      <!-- Slides (images de fond en cross-fade) -->
+      <div id="carousel-slides" class="absolute inset-0">
+        <div class="absolute inset-0 skeleton"></div>
       </div>
+
+      <!-- Dégradé bas -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none"></div>
+
+      <!-- Contenu texte centré -->
+      <a id="hero-link" href="#"
+        class="absolute inset-0 flex flex-col items-center justify-end pb-20 text-center text-white px-6">
+        <span id="hero-cat" class="text-xs font-bold tracking-widest mb-4 opacity-80"></span>
+        <h1 id="hero-title" class="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight max-w-3xl drop-shadow-lg"></h1>
+        <p id="hero-date" class="text-sm mt-3 opacity-50"></p>
+      </a>
+
+      <!-- Points de navigation (bas gauche) -->
+      <div id="carousel-dots" class="absolute bottom-6 left-6 flex items-center gap-2 z-10"></div>
+
+      <!-- Miniatures (droite, desktop) -->
+      <div id="carousel-thumbs" class="absolute right-4 top-1/2 -translate-y-1/2 flex-col gap-2 hidden md:flex z-10"></div>
+
     </section>
 
     <!-- ============================================================
