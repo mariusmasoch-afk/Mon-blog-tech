@@ -1015,6 +1015,9 @@
     // Lien d'achat
     document.getElementById('buy-link-input').value = a.lien_achat || '';
 
+    // Localisation
+    document.getElementById('localisation-input').value = a.localisation || '';
+
     // Rédacteur
     await loadRedacteurSelect();
     if (a.redacteur_id) document.getElementById('redacteur-select').value = a.redacteur_id;
