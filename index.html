@@ -469,101 +469,86 @@
   }
 
   // ============================================================
-  // HERO DYNAMIQUE — cache localStorage + refresh silencieux
+  // CARROUSEL HERO — 5 derniers articles publiés
   // ============================================================
-  const HERO_CACHE_KEY = 'tf_hero';
-  const HERO_CACHE_TTL = 60 * 60 * 1000; // 1 heure
+  let _slides = [], _idx = 0, _timer = null;
 
-  function renderHero(hero) {
-    const grid = document.getElementById('hero-grid');
-    if (!hero) return;
+  function buildCarousel(articles) {
+    if (!articles || !articles.length) return;
+    _slides = articles;
 
-    const date = new Date(hero.date_creation).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-    const mins = hero.temps_lecture ? `· ${hero.temps_lecture} min` : '';
-    const url  = hero.slug ? `article.html?slug=${hero.slug}` : '#';
-    const cat  = CAT_LABELS[hero.categorie] || hero.categorie || 'Article';
-    const style = CAT_STYLES[hero.categorie] || CAT_STYLES['tests'];
+    // Slides (images de fond empilées)
+    document.getElementById('carousel-slides').innerHTML = articles.map((a, i) => `
+      <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ${i === 0 ? 'opacity-100' : 'opacity-0'}"
+           style="background:url('${a.image_url || ''}') center/cover no-repeat;background-color:#1f2937;"></div>
+    `).join('');
 
-    const imageHTML = hero.image_url
-      ? `<img src="${hero.image_url}" alt="${hero.titre}" class="w-full h-full object-cover" style="object-position:center 65%;" />`
-      : `<div class="w-full h-full bg-gradient-to-br ${style.bg} flex items-center justify-center">
-           <svg class="w-14 h-14 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
-             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-           </svg>
-         </div>`;
+    // Points de navigation
+    document.getElementById('carousel-dots').innerHTML = articles.map((_, i) => `
+      <button onclick="slideTo(${i})" aria-label="Slide ${i+1}"
+        class="carousel-dot transition-all duration-300 rounded-full h-2 ${i === 0 ? 'w-7 bg-white' : 'w-2 bg-white/40'}"></button>
+    `).join('');
 
-    grid.innerHTML = `
-      <div class="space-y-5">
-        <div class="flex items-center gap-2">
-          <span class="inline-block px-2.5 py-1 rounded-full ${style.tag} text-xs font-semibold uppercase tracking-wide">
-            ${cat}
-          </span>
-          <span class="text-gray-400 text-xs">${date} ${mins}</span>
-        </div>
-        <h1 id="hero-title" class="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight text-gray-900">
-          ${hero.titre}
-        </h1>
-        <p class="text-lg text-gray-500 leading-relaxed max-w-prose">${hero.extrait || ''}</p>
-        <div class="flex items-center gap-4 pt-1">
-          <a href="${url}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-700 transition-colors">
-            Lire le test
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4-4 4M3 12h18"/>
-            </svg>
-          </a>
-          ${hero.redacteurs ? `<div class="flex items-center gap-2">
-            ${hero.redacteurs.photo_url
-              ? `<img src="${hero.redacteurs.photo_url}" alt="${hero.redacteurs.prenom} ${hero.redacteurs.nom}" class="w-8 h-8 rounded-full object-cover border border-gray-200" />`
-              : `<div class="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold text-xs shrink-0">${hero.redacteurs.prenom[0]}${hero.redacteurs.nom[0]}</div>`
-            }
-            <span class="text-sm text-gray-500">par <strong class="text-gray-700">${hero.redacteurs.prenom} ${hero.redacteurs.nom}</strong></span>
-          </div>` : ''}
-        </div>
-      </div>
-      <div class="relative rounded-2xl overflow-hidden aspect-[4/3] bg-gray-100">
-        ${imageHTML}
-        <span class="absolute top-4 left-4 bg-gray-900/80 backdrop-blur text-white text-xs font-medium px-3 py-1.5 rounded-full">${cat}</span>
-      </div>`;
+    // Miniatures droite
+    document.getElementById('carousel-thumbs').innerHTML = articles.map((a, i) => `
+      <button onclick="slideTo(${i})" aria-label="${a.titre}"
+        class="carousel-thumb w-14 h-14 rounded-xl overflow-hidden border-2 transition-all duration-300 ${i === 0 ? 'border-white scale-105' : 'border-white/30 opacity-50'}"
+        style="background:url('${a.image_url || ''}') center/cover no-repeat;background-color:#374151;"></button>
+    `).join('');
+
+    updateCarousel(0);
+    startTimer();
   }
 
-  async function loadHero() {
-    // 1. Affichage instantané depuis le cache si disponible
-    try {
-      const cached = JSON.parse(localStorage.getItem(HERO_CACHE_KEY));
-      if (cached && cached.data && (Date.now() - cached.ts < HERO_CACHE_TTL)) {
-        renderHero(cached.data);
-        // Rafraîchissement silencieux en arrière-plan
-        fetchHero(true);
-        return;
-      }
-    } catch(e) {}
+  function updateCarousel(idx) {
+    const a = _slides[idx];
+    const cat = CAT_LABELS[a.categorie] || a.categorie || '';
+    const date = new Date(a.date_creation).toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const url = a.slug ? `article.html?slug=${a.slug}` : `article.html?id=${a.id}`;
 
-    // 2. Pas de cache valide : fetch bloquant
-    await fetchHero(false);
+    document.getElementById('hero-cat').innerHTML  = `<span style="color:#f59e0b">#</span> ${cat}`;
+    document.getElementById('hero-title').textContent = a.titre;
+    document.getElementById('hero-date').textContent  = date;
+    document.getElementById('hero-link').href = url;
+
+    document.querySelectorAll('.carousel-slide').forEach((el, i) =>
+      el.style.opacity = i === idx ? '1' : '0');
+
+    document.querySelectorAll('.carousel-dot').forEach((el, i) => {
+      el.className = `carousel-dot transition-all duration-300 rounded-full h-2 ${i === idx ? 'w-7 bg-white' : 'w-2 bg-white/40'}`;
+    });
+
+    document.querySelectorAll('.carousel-thumb').forEach((el, i) => {
+      el.className = `carousel-thumb w-14 h-14 rounded-xl overflow-hidden border-2 transition-all duration-300 ${i === idx ? 'border-white scale-105' : 'border-white/30 opacity-50'}`;
+    });
   }
 
-  async function fetchHero(silent) {
-    const { data: rows, error } = await db
+  function slideTo(idx) {
+    _idx = idx;
+    updateCarousel(idx);
+    clearInterval(_timer);
+    startTimer();
+  }
+
+  function startTimer() {
+    _timer = setInterval(() => {
+      _idx = (_idx + 1) % _slides.length;
+      updateCarousel(_idx);
+    }, 5000);
+  }
+
+  async function loadCarousel() {
+    const { data, error } = await db
       .from('articles')
-      .select('id, titre, extrait, categorie, image_url, slug, temps_lecture, date_creation, redacteurs(prenom, nom, photo_url)')
+      .select('id, titre, categorie, image_url, slug, date_creation')
       .eq('statut', 'publié')
-      .eq('is_hero', true)
-      .limit(1);
+      .order('date_creation', { ascending: false })
+      .limit(5);
 
-    if (error || !rows || !rows.length) {
-      // Effacer le skeleton si aucun hero défini
-      if (!silent) document.getElementById('hero-grid').innerHTML =
-        '<p class="col-span-2 text-center text-gray-300 py-10 text-sm">Aucun article hero défini.</p>';
-      return;
-    }
-
-    const hero = rows[0];
-    try { localStorage.setItem(HERO_CACHE_KEY, JSON.stringify({ data: hero, ts: Date.now() })); } catch(e) {}
-    if (!silent) renderHero(hero);
-    else renderHero(hero); // toujours mettre à jour même en silencieux
+    if (!error && data && data.length) buildCarousel(data);
   }
 
-  loadHero();
+  loadCarousel();
   loadArticles();
 
   // --- Newsletter : inscription ---
