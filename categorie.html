@@ -28,6 +28,13 @@
   <style>
     .nav-link::after { content:''; display:block; height:2px; width:0; background:#f59e0b; transition:width .25s ease; }
     .nav-link:hover::after { width:100%; }
+    .nav-group { position: relative; }
+    .nav-dropdown { position:absolute; top:calc(100% + 6px); left:50%; transform:translateX(-50%) translateY(-4px); min-width:200px; background:#fff; border:1px solid #f3f4f6; border-radius:14px; box-shadow:0 8px 24px rgba(0,0,0,.10); padding:6px; opacity:0; visibility:hidden; transition:opacity .18s ease,transform .18s ease,visibility .18s; z-index:100; }
+    .nav-group:hover .nav-dropdown { opacity:1; visibility:visible; transform:translateX(-50%) translateY(0); }
+    .nav-dropdown a { display:flex; align-items:center; gap:9px; padding:8px 12px; border-radius:8px; color:#374151; font-size:.875rem; font-weight:500; text-decoration:none; transition:background .15s,color .15s; }
+    .nav-dropdown a:hover { background:#f9fafb; color:#111827; }
+    .nav-chevron { transition:transform .2s ease; }
+    .nav-group:hover .nav-chevron { transform:rotate(180deg); }
     .article-card { transition: transform .2s ease, box-shadow .2s ease; }
     .article-card:hover { transform:translateY(-4px); box-shadow:0 12px 28px rgba(0,0,0,.08); }
     .article-card img { transition: transform .45s cubic-bezier(.22,1,.36,1); }
