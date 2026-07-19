@@ -272,11 +272,11 @@
     // Mise à jour du head
     document.title = `TechFlair — ${meta.label}`;
 
-    // Bannière image
-    const bannerImg = document.getElementById('cat-banner-img');
-    if (bannerImg && CAT_BANNERS[cat]) {
-      bannerImg.src = CAT_BANNERS[cat];
-      bannerImg.alt = meta.label;
+    // Bannière dégradé
+    const banner = CAT_BANNERS[cat];
+    if (banner) {
+      document.getElementById('cat-banner').style.background = banner.gradient;
+      document.getElementById('cat-banner-deco').innerHTML = banner.svg;
     }
 
     // En-tête de rubrique
