@@ -975,6 +975,10 @@
   }
 
   async function toggleCarousel(id, isCurrently) {
+    if (!isCurrently) {
+      const { count } = await db.from('articles').select('id', { count: 'exact', head: true }).eq('is_carousel', true);
+      if (count >= 5) { showToast('Maximum 5 articles dans le carrousel.', false); return; }
+    }
     const { error } = await db.from('articles').update({ is_carousel: !isCurrently }).eq('id', id);
     if (error) { showToast('Erreur : ' + error.message, false); return; }
     showToast(isCurrently ? 'Retiré du carrousel' : '⭐ Ajouté au carrousel !');
