@@ -974,14 +974,10 @@
       </tr>`).join('');
   }
 
-  async function setHero(id, isCurrentlyHero) {
-    if (isCurrentlyHero) return;
-    await db.from('articles').update({ is_hero: false }).neq('id', '00000000-0000-0000-0000-000000000000');
-    const { error } = await db.from('articles').update({ is_hero: true }).eq('id', id);
+  async function toggleCarousel(id, isCurrently) {
+    const { error } = await db.from('articles').update({ is_carousel: !isCurrently }).eq('id', id);
     if (error) { showToast('Erreur : ' + error.message, false); return; }
-    // Invalider le cache hero sur le site client
-    localStorage.removeItem('tf_hero');
-    showToast('⭐ Article défini comme hero du site !');
+    showToast(isCurrently ? 'Retiré du carrousel' : '⭐ Ajouté au carrousel !');
     loadArticlesTable();
   }
 
