@@ -937,7 +937,7 @@
   async function loadArticlesTable() {
     const tbody = document.getElementById('articles-table-body');
     const { data, error } = await db.from('articles')
-      .select('id, titre, categorie, statut, date_creation, is_hero')
+      .select('id, titre, categorie, statut, date_creation, is_carousel')
       .order('date_creation', { ascending: false });
 
     if (error) {
@@ -950,11 +950,11 @@
       return;
     }
     tbody.innerHTML = data.map(a => `
-      <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors ${a.is_hero ? 'bg-amber-50' : ''}">
+      <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors ${a.is_carousel ? 'bg-amber-50' : ''}">
         <td class="px-4 py-3 text-center">
-          <button onclick="setHero('${a.id}', ${a.is_hero})"
-            title="${a.is_hero ? 'Article hero actuel' : 'Définir comme hero'}"
-            class="text-xl leading-none transition-transform hover:scale-125 ${a.is_hero ? 'text-amber-400' : 'text-gray-200 hover:text-amber-300'}">
+          <button onclick="toggleCarousel('${a.id}', ${a.is_carousel})"
+            title="${a.is_carousel ? 'Retirer du carrousel' : 'Ajouter au carrousel'}"
+            class="text-xl leading-none transition-transform hover:scale-125 ${a.is_carousel ? 'text-amber-400' : 'text-gray-200 hover:text-amber-300'}">
             ★
           </button>
         </td>
