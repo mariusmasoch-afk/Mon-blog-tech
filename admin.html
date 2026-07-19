@@ -1415,9 +1415,10 @@
 
   // --- Template selector ---
   const templateDescriptions = {
-    classic: 'Article long format avec image de couverture et chapô.',
-    product: 'Test produit : note globale, tableau points forts/faibles, verdict final.',
-    comparatif: 'Comparatif deux produits côte à côte avec tableau récapitulatif.',
+    classic:    'Article long format avec image de couverture et chapô.',
+    product:    'Test produit : note globale, tableau points forts/faibles, verdict final.',
+    hotel:      'Review hôtel ou lieu : ambiance, situation, rapport qualité/prix, verdict.',
+    comparatif: 'Comparatif deux produits ou adresses côte à côte avec tableau récapitulatif.',
   };
   function selectTemplate(el, type) {
     document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
