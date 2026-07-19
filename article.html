@@ -15,9 +15,9 @@
       theme: {
         extend: {
           fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
-          colors: { brand: { 50:'#f0f9ff',100:'#e0f2fe',400:'#38bdf8',500:'#0ea5e9',600:'#0284c7',700:'#0369a1' } },
+          colors: { brand: { 50:'#fffbeb',100:'#fef3c7',400:'#fbbf24',500:'#f59e0b',600:'#d97706',700:'#b45309' } },
           typography: { DEFAULT: { css: {
-            a: { color: '#0ea5e9', '&:hover': { color: '#0284c7' } },
+            a: { color: '#f59e0b', '&:hover': { color: '#d97706' } },
             'h2,h3,h4': { fontWeight: '700', color: '#111827' },
           }}}
         },
@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    .nav-link::after { content:''; display:block; height:2px; width:0; background:#0ea5e9; transition:width .25s ease; }
+    .nav-link::after { content:''; display:block; height:2px; width:0; background:#f59e0b; transition:width .25s ease; }
     .nav-link:hover::after { width:100%; }
     /* Article content styles */
     .article-content h2 { font-size:1.5rem; font-weight:700; color:#111827; margin:2rem 0 .75rem; }
@@ -40,9 +40,9 @@
     .article-content ul { list-style:disc; }
     .article-content ol { list-style:decimal; }
     .article-content li { margin:.35rem 0; line-height:1.7; color:#374151; }
-    .article-content a  { color:#0ea5e9; text-decoration:underline; }
-    .article-content a:hover { color:#0284c7; }
-    .article-content blockquote { border-left:3px solid #0ea5e9; padding-left:1rem; margin:1.5rem 0; color:#6b7280; font-style:italic; }
+    .article-content a  { color:#f59e0b; text-decoration:underline; }
+    .article-content a:hover { color:#d97706; }
+    .article-content blockquote { border-left:3px solid #f59e0b; padding-left:1rem; margin:1.5rem 0; color:#6b7280; font-style:italic; }
     .article-content hr { margin:2rem 0; border-color:#e5e7eb; }
     .article-content img { border-radius:.75rem; margin:1.5rem 0; max-width:100%; }
     .article-content strong { font-weight:600; color:#111827; }
