@@ -6,9 +6,35 @@
   <meta name="description" content="Écrivez pour TechFlair — Partagez votre expérience produit avec notre communauté."/>
   <title>Écrire pour nous — TechFlair</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']},colors:{brand:{50:'#fffbeb',100:'#fef3c7',400:'#fbbf24',500:'#f59e0b',600:'#d97706'}}}}};</script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']},colors:{brand:{50:'#fffbeb',100:'#fef3c7',400:'#fbbf24',500:'#f59e0b',600:'#d97706',700:'#b45309'}}}}};</script>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <style>.nav-link::after{content:'';display:block;height:2px;width:0;background:#f59e0b;transition:width .25s ease;}.nav-link:hover::after{width:100%;}</style>
+  <style>
+    .nav-group { position: relative; }
+    .nav-dropdown {
+      position: absolute; top: calc(100% + 6px); left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      min-width: 200px; background: #fff; border: 1px solid #f3f4f6;
+      border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.10);
+      padding: 6px; opacity: 0; visibility: hidden;
+      transition: opacity .18s ease, transform .18s ease, visibility .18s;
+      z-index: 100;
+    }
+    .nav-group:hover .nav-dropdown { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+    .nav-dropdown a {
+      display: flex; align-items: center; gap: 9px; padding: 8px 12px;
+      border-radius: 8px; color: #374151; font-size: .875rem; font-weight: 500;
+      text-decoration: none; transition: background .15s, color .15s;
+    }
+    .nav-dropdown a:hover { background: #f9fafb; color: #111827; }
+    .nav-chevron { transition: transform .2s ease; }
+    .nav-group:hover .nav-chevron { transform: rotate(180deg); }
+    .nav-link::after { content:''; display:block; height:2px; width:0; background:#f59e0b; transition:width .25s ease; }
+    .nav-link:hover::after { width:100%; }
+  </style>
   <!-- Google Analytics + Consent Mode (CNIL) -->
   <script>
     window.dataLayer = window.dataLayer || [];
