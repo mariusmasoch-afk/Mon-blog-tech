@@ -281,6 +281,8 @@
     if (banner) {
       document.getElementById('cat-banner').style.background = banner.gradient;
       document.getElementById('cat-banner-deco').innerHTML = banner.svg;
+      document.getElementById('cat-banner-emoji').textContent = meta.emoji || '';
+      document.getElementById('cat-banner-label').textContent = meta.label || '';
     }
 
     // En-tête de rubrique
