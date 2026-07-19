@@ -165,14 +165,20 @@
     const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
     const CAT_META = {
-      'tests':      { label:'Tests & Avis',       desc:'Nos tests approfondis et avis honnêtes sur les produits tech.',    badge:'bg-sky-100 text-sky-700',     emoji:'🔍' },
-      'gadgets':    { label:'Gadgets',             desc:'Les meilleurs gadgets tech sélectionnés et testés pour vous.',     badge:'bg-violet-100 text-violet-700',emoji:'⌚' },
-      'logiciels':  { label:'Apps et logiciels',    desc:'Applications, outils numériques et logiciels pour tous vos usages.',  badge:'bg-rose-100 text-rose-700',    emoji:'💡' },
+      'tests':      { label:'Tests & Avis',        desc:'Nos tests approfondis et avis honnêtes sur les produits tech.',              badge:'bg-sky-100 text-sky-700',      emoji:'🔍' },
+      'gadgets':    { label:'Gadgets',              desc:'Les meilleurs gadgets tech sélectionnés et testés pour vous.',               badge:'bg-violet-100 text-violet-700', emoji:'⌚' },
+      'logiciels':  { label:'Apps et logiciels',   desc:'Applications, outils numériques et logiciels pour tous vos usages.',         badge:'bg-rose-100 text-rose-700',     emoji:'💡' },
+      'hotels':     { label:'Hôtels & Séjours',    desc:'Nos coups de cœur hôtels, chambres d\'hôtes et adresses pour vos escapades.', badge:'bg-amber-100 text-amber-700',   emoji:'🏨' },
+      'activites':  { label:'Activités & Sorties', desc:'Les meilleures activités, expériences et sorties testées pour vous.',         badge:'bg-emerald-100 text-emerald-700',emoji:'🎯' },
+      'lifestyle':  { label:'Lifestyle',           desc:'Sélections, bons plans et découvertes pour enrichir votre quotidien.',        badge:'bg-fuchsia-100 text-fuchsia-700',emoji:'✨' },
     };
     const CAT_STYLES = {
       'tests':      { bg:'from-sky-50 to-cyan-100',       tag:'bg-sky-100 text-sky-700' },
       'gadgets':    { bg:'from-violet-50 to-purple-100',   tag:'bg-violet-100 text-violet-700' },
       'logiciels':  { bg:'from-rose-50 to-pink-100',       tag:'bg-rose-100 text-rose-700' },
+      'hotels':     { bg:'from-amber-50 to-orange-100',    tag:'bg-amber-100 text-amber-700' },
+      'activites':  { bg:'from-emerald-50 to-green-100',   tag:'bg-emerald-100 text-emerald-700' },
+      'lifestyle':  { bg:'from-fuchsia-50 to-pink-100',    tag:'bg-fuchsia-100 text-fuchsia-700' },
     };
 
     const CAT_BANNERS = {
