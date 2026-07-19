@@ -540,14 +540,26 @@
   }
 
   async function loadCarousel() {
-    const { data, error } = await db
+    // 1. Articles marqués carrousel
+    const { data: starred } = await db
+      .from('articles')
+      .select('id, titre, categorie, image_url, slug, date_creation')
+      .eq('statut', 'publié')
+      .eq('is_carousel', true)
+      .order('date_creation', { ascending: false })
+      .limit(5);
+
+    if (starred && starred.length) { buildCarousel(starred); return; }
+
+    // 2. Fallback : 5 derniers publiés
+    const { data: latest } = await db
       .from('articles')
       .select('id, titre, categorie, image_url, slug, date_creation')
       .eq('statut', 'publié')
       .order('date_creation', { ascending: false })
       .limit(5);
 
-    if (!error && data && data.length) buildCarousel(data);
+    if (latest && latest.length) buildCarousel(latest);
   }
 
   loadCarousel();
