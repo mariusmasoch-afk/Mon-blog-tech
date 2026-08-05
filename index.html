@@ -441,7 +441,7 @@
   }
 
   function buildCard(article) {
-    const style  = CAT_STYLES[article.categorie] || CAT_STYLES['gadgets'];
+    const style  = CAT_STYLES[article.categorie] || CAT_STYLES['montres'];
     const label  = CAT_LABELS[article.categorie] || article.categorie;
     const date   = formatDate(article.date_creation);
     const mins   = article.temps_lecture ? `${article.temps_lecture} min` : '';
