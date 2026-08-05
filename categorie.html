@@ -268,7 +268,7 @@
       if (!data.length) {
         grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-16">Aucun article dans cette rubrique pour l'instant.</p>`; return;
       }
-      const style = CAT_STYLES[cat] || CAT_STYLES['montres'];
+      const style = CAT_STYLES[cat] || CAT_STYLES['mode'];
       grid.innerHTML = data.map(a => {
         const img = a.image_url
           ? `<img src="${a.image_url}" alt="${a.titre}" class="w-full h-44 object-cover"/>`
