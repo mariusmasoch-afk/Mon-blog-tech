@@ -1053,7 +1053,7 @@
       // Cache hero si c'était le hero
       if (is_hero) localStorage.removeItem('tf_hero');
       // Cache des catégories (on purge tout pour être sûr)
-      ['tests', 'gadgets', 'logiciels'].forEach(cat => localStorage.removeItem(`tf_cat_${cat}`));
+      ['montres', 'mode', 'sport', 'hotels'].forEach(cat => localStorage.removeItem(`tf_cat_${cat}`));
     }
 
     showToast('Article supprimé');
@@ -1565,7 +1565,7 @@
     }
     // Purger le cache de cet article
     if (data.slug) localStorage.removeItem(`tf_article_${data.slug}`);
-    ['tests', 'gadgets', 'logiciels'].forEach(cat => localStorage.removeItem(`tf_cat_${cat}`));
+    ['montres', 'mode', 'sport', 'hotels'].forEach(cat => localStorage.removeItem(`tf_cat_${cat}`));
 
     document.getElementById('save-status').innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Brouillon sauvegardé';
@@ -1628,7 +1628,7 @@
     // Purger TOUS les caches liés à cet article pour que le site soit à jour partout
     localStorage.removeItem('tf_hero');
     localStorage.removeItem(`tf_article_${data.slug}`);
-    ['tests', 'gadgets', 'logiciels'].forEach(cat => localStorage.removeItem(`tf_cat_${cat}`));
+    ['montres', 'mode', 'sport', 'hotels'].forEach(cat => localStorage.removeItem(`tf_cat_${cat}`));
 
     document.getElementById('save-status').innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span> Publié';
