@@ -7,29 +7,15 @@
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" href="/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Les Heures Flâneuses — Montres, mode, sport & bien-être, hôtels : des sélections sincères pour vivre mieux." />
-  <title>Les Heures Flâneuses — Montres, Mode &amp; Art de Vivre</title>
+  <meta name="description" content="Les Heures Flâneuses — Mode, sport & bien-être, hôtels & voyages : des sélections sincères pour vivre mieux." />
+  <title>Les Heures Flâneuses — Mode &amp; Art de Vivre</title>
 
-  <!-- Open Graph / Réseaux sociaux -->
   <meta property="og:type"        content="website" />
   <meta property="og:url"         content="https://lesheuresflaneuses.fr/" />
-  <meta property="og:title"       content="Les Heures Flâneuses — Montres, Mode &amp; Art de Vivre" />
-  <meta property="og:description" content="Les Heures Flâneuses — Montres, mode, sport & bien-être, hôtels : des sélections sincères pour vivre mieux." />
+  <meta property="og:title"       content="Les Heures Flâneuses — Mode &amp; Art de Vivre" />
+  <meta property="og:description" content="Mode, sport & bien-être, hôtels & voyages — des sélections sincères pour vivre mieux." />
   <meta property="og:image"       content="https://lesheuresflaneuses.fr/og-cover.jpg" />
-  <meta name="twitter:card"       content="summary_large_image" />
-  <meta name="twitter:title"      content="Les Heures Flâneuses — Montres, Mode &amp; Art de Vivre" />
-  <meta name="twitter:description" content="Les Heures Flâneuses — Montres, mode, sport & bien-être, hôtels : des sélections sincères pour vivre mieux." />
-  <meta name="twitter:image"      content="https://lesheuresflaneuses.fr/og-cover.jpg" />
 
-  <!-- ============================================================
-    ANALYTICS — GOOGLE ANALYTICS (GA4)
-    1. Remplace "G-XXXXXXXXXX" par ton Measurement ID GA4.
-    2. Décommente les deux balises <script> ci-dessous.
-    3. Pour Plausible : remplace les deux blocs par :
-       <script defer data-domain="tondomaine.com"
-               src="https://plausible.io/js/script.js"></script>
-  =============================================================== -->
-  <!-- Google Analytics + Consent Mode (CNIL) -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -41,126 +27,64 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-39RE8T7LE5"></script>
   <script>gtag('js', new Date()); gtag('config', 'G-39RE8T7LE5');</script>
 
-  <!-- Tailwind CSS via CDN -->
-  <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
           colors: {
-            brand: {
-              50:  '#fffbeb',
-              100: '#fef3c7',
-              400: '#fbbf24',
-              500: '#f59e0b',
-              600: '#d97706',
-              700: '#b45309',
-            },
-          },
-          typography: {
-            DEFAULT: { css: { maxWidth: '70ch' } },
+            brand: { 50:'#fffbeb', 100:'#fef3c7', 400:'#fbbf24', 500:'#f59e0b', 600:'#d97706', 700:'#b45309' },
           },
         },
       },
     };
   </script>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* Dropdown nav */
-    .nav-group { position: relative; }
-    .nav-dropdown {
-      position: absolute; top: calc(100% + 6px); left: 50%;
-      transform: translateX(-50%) translateY(-4px);
-      min-width: 200px; background: #fff; border: 1px solid #f3f4f6;
-      border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.10);
-      padding: 6px; opacity: 0; visibility: hidden;
-      transition: opacity .18s ease, transform .18s ease, visibility .18s;
-      z-index: 100;
-    }
-    .nav-group:hover .nav-dropdown { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-    .nav-dropdown a {
-      display: flex; align-items: center; gap: 9px; padding: 8px 12px;
-      border-radius: 8px; color: #374151; font-size: .875rem; font-weight: 500;
-      text-decoration: none; transition: background .15s, color .15s;
-    }
-    .nav-dropdown a:hover { background: #f9fafb; color: #111827; }
-    .nav-chevron { transition: transform .2s ease; }
-    .nav-group:hover .nav-chevron { transform: rotate(180deg); }
+    /* Nav underline */
+    .nav-link { position: relative; }
+    .nav-link::after { content:''; position:absolute; left:0; bottom:-2px; height:2px; width:0; background:#f59e0b; transition:width .22s ease; }
+    .nav-link:hover::after { width:100%; }
 
-    /* Smooth underline animation for nav links */
-    .nav-link::after {
-      content: '';
-      display: block;
-      height: 2px;
-      width: 0;
-      background: #f59e0b;
-      transition: width .25s ease;
-    }
-    .nav-link:hover::after { width: 100%; }
+    /* Hero plein écran */
+    #hero { position:relative; width:100%; height:78vh; min-height:420px; max-height:820px; overflow:hidden; background:#111; }
+    #hero-slides { position:absolute; inset:0; }
+    .hero-slide { position:absolute; inset:0; background-size:cover; background-position:center; transition:opacity .8s ease; }
+    #hero-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.82) 0%, rgba(0,0,0,.18) 55%, transparent 100%); }
 
-    /* Bouton "Lire" sur survol card */
-    .article-card .read-btn {
-      display: inline-flex; align-items: center; gap: .25rem;
-      font-size: .875rem; font-weight: 500; color: #d97706;
-      padding: .3rem .65rem; border-radius: .5rem; margin-left: -.65rem;
-      transition: background .2s ease, color .2s ease, transform .2s ease;
-    }
-    .article-card:hover .read-btn {
-      background: #111827; color: #fff; transform: translateX(3px);
-    }
+    /* Miniature hero */
+    .hero-thumb { width:90px; height:90px; border-radius:12px; overflow:hidden; background-size:cover; background-position:center; border:2px solid rgba(255,255,255,.25); cursor:pointer; transition:border-color .2s, transform .2s, opacity .2s; }
+    .hero-thumb.active { border-color:#fff; transform:scale(1.06); opacity:1; }
+    .hero-thumb:not(.active) { opacity:.5; }
 
-    /* Card hover lift + image zoom */
-    .article-card { transition: transform .2s ease, box-shadow .2s ease; }
-    .article-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
-    .article-card img { transition: transform .45s cubic-bezier(.22,1,.36,1); }
-    .article-card:hover img { transform: scale(1.06); }
+    /* Dot */
+    .hero-dot { height:6px; border-radius:4px; background:rgba(255,255,255,.35); transition:width .3s, background .3s; }
+    .hero-dot.active { width:28px !important; background:#fff; }
 
-    /* Scroll reveal */
-    .reveal { opacity:0; transform:translateY(18px); transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1); }
+    /* Cards */
+    .article-card { transition:transform .2s ease, box-shadow .2s ease; }
+    .article-card:hover { transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,.07); }
+    .article-card img { transition:transform .45s cubic-bezier(.22,1,.36,1); }
+    .article-card:hover img { transform:scale(1.05); }
+    .read-btn { display:inline-flex; align-items:center; gap:.25rem; font-size:.875rem; font-weight:500; color:#d97706; padding:.3rem .65rem; border-radius:.5rem; margin-left:-.65rem; transition:background .2s, color .2s, transform .2s; }
+    .article-card:hover .read-btn { background:#111827; color:#fff; transform:translateX(3px); }
+
+    /* Reveal */
+    .reveal { opacity:0; transform:translateY(16px); transition:opacity .5s cubic-bezier(.22,1,.36,1), transform .5s cubic-bezier(.22,1,.36,1); }
     .reveal.is-visible { opacity:1; transform:none; }
-    .reveal:nth-child(2) { transition-delay:.08s; }
-    .reveal:nth-child(3) { transition-delay:.16s; }
-    .reveal:nth-child(4) { transition-delay:.24s; }
-    .reveal:nth-child(5) { transition-delay:.32s; }
-    .reveal:nth-child(6) { transition-delay:.40s; }
 
-    /* Header scroll */
-    header { transition: box-shadow .3s ease; }
-    .header-scrolled { box-shadow: 0 2px 20px rgba(0,0,0,.07) !important; }
+    /* Skeleton */
+    .skeleton { background:linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-    /* Page entry */
-    main { animation: pageFadeIn .45s ease both; }
-    @keyframes pageFadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
-
-    /* Bouton press */
-    button:active, a.btn:active { transform: scale(.97); }
-
-    /* Respect prefers-reduced-motion */
     @media (prefers-reduced-motion: reduce) {
-      .reveal, .article-card, .article-card img, header, main { transition:none !important; animation:none !important; opacity:1 !important; transform:none !important; }
-    }
-
-/* Skeleton loading */
-    .skeleton {
-      background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.4s infinite;
-    }
-    @keyframes shimmer {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+      .reveal, .article-card, .article-card img, .hero-slide { transition:none !important; animation:none !important; opacity:1 !important; transform:none !important; }
     }
   </style>
   <script src="/animations.js" defer></script>
@@ -168,256 +92,196 @@
 
 <body class="bg-white text-gray-900 font-sans antialiased">
 
-  <!-- ============================================================
-    HEADER
-  =============================================================== -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
-
-      <!-- Logo -->
-      <a href="/" class="flex items-center gap-2 shrink-0" aria-label="Les Heures Flâneuses — Accueil">
-        <img src="/favicon.svg" alt="Les Heures Flâneuses" style="height:30px;width:30px" class="rounded-lg" />
-        <span class="font-sans font-bold tracking-tight text-gray-900 flex flex-col" style="gap:0"><span class="text-sm leading-none">Les Heures</span><span class="text-base leading-none text-brand-500">Flâneuses</span></span>
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-6">
+      <a href="/" class="flex items-center gap-2 shrink-0" aria-label="Les Heures Flâneuses">
+        <img src="/favicon.svg" alt="" style="height:30px;width:30px" class="rounded-lg" />
+        <span class="font-bold tracking-tight text-gray-900 flex flex-col" style="gap:0">
+          <span class="text-sm leading-none">Les Heures</span>
+          <span class="text-base leading-none text-brand-500">Flâneuses</span>
+        </span>
       </a>
 
-      <!-- Nav principale -->
-      <nav aria-label="Navigation principale" class="hidden md:flex items-center gap-1 text-sm font-medium text-gray-600">
-        <a href="categorie.html?cat=mode" class="px-3 py-2 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors font-medium">Mode</a>
-        <a href="categorie.html?cat=sport" class="px-3 py-2 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors font-medium">Sport &amp; Bien-être</a>
-        <a href="categorie.html?cat=hotels" class="px-3 py-2 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors font-medium">Hôtels &amp; Voyages</a>
+      <nav aria-label="Navigation principale" class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+        <a href="categorie.html?cat=mode"   class="nav-link hover:text-gray-900 transition-colors pb-0.5">Mode</a>
+        <a href="categorie.html?cat=sport"  class="nav-link hover:text-gray-900 transition-colors pb-0.5">Sport &amp; Bien-être</a>
+        <a href="categorie.html?cat=hotels" class="nav-link hover:text-gray-900 transition-colors pb-0.5">Hôtels &amp; Voyages</a>
       </nav>
 
-      <!-- Actions droite -->
       <div class="flex items-center gap-3">
-<!-- CTA Newsletter -->
-        <a href="#newsletter"
-          class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-700 transition-colors">
-          S'abonner
-        </a>
-
-        <!-- Burger mobile -->
+        <a href="#newsletter" class="hidden sm:inline-flex items-center px-4 py-1.5 rounded-full border border-gray-900 text-gray-900 text-xs font-semibold hover:bg-gray-900 hover:text-white transition-colors">S'abonner</a>
         <button id="menu-btn" aria-label="Menu" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
     </div>
 
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 px-4 py-4 text-sm font-medium text-gray-700">
-      <a href="categorie.html?cat=mode" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-gray-50">✨ Mode</a>
-      <a href="categorie.html?cat=sport" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-gray-50">🏃 Sport &amp; Bien-être</a>
-      <a href="categorie.html?cat=hotels" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-gray-50">🏨 Hôtels &amp; Voyages</a>
+    <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 px-4 py-3 text-sm font-medium text-gray-700 space-y-1">
+      <a href="categorie.html?cat=mode"   class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50">Mode</a>
+      <a href="categorie.html?cat=sport"  class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50">Sport &amp; Bien-être</a>
+      <a href="categorie.html?cat=hotels" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50">Hôtels &amp; Voyages</a>
     </div>
   </header>
 
-
   <main>
 
-    <!-- ============================================================
-      HERO — Carrousel (dynamique via Supabase)
-    =============================================================== -->
-    <section class="max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-4">
-      <div id="hero-carousel" aria-label="Articles à la une"
-        class="relative overflow-hidden rounded-2xl bg-gray-900"
-        style="height:72vh;max-height:740px;min-height:400px;">
+    <!-- HERO PLEIN ÉCRAN -->
+    <section id="hero" aria-label="Article à la une">
 
-        <!-- Slides (images de fond en cross-fade) -->
-        <div id="carousel-slides" class="absolute inset-0">
-          <div class="absolute inset-0 skeleton rounded-2xl"></div>
-        </div>
-
-        <!-- Dégradé bas -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none rounded-2xl"></div>
-
-        <!-- Contenu texte centré -->
-        <a id="hero-link" href="#"
-          class="absolute inset-0 flex flex-col items-center justify-end pb-14 text-center text-white px-6">
-          <span id="hero-cat" class="text-xs font-bold tracking-widest mb-3 opacity-80"></span>
-          <h1 id="hero-title" class="text-xl sm:text-2xl md:text-4xl font-bold leading-tight max-w-3xl drop-shadow-lg"></h1>
-          <p id="hero-date" class="text-sm mt-2 opacity-50"></p>
-        </a>
-
-        <!-- Points de navigation (bas gauche) -->
-        <div id="carousel-dots" class="absolute bottom-5 left-5 flex items-center gap-2 z-10"></div>
-
-        <!-- Miniatures (droite, desktop) -->
-        <div id="carousel-thumbs" class="absolute right-3 top-1/2 -translate-y-1/2 flex-col gap-2 hidden md:flex z-10"></div>
-
+      <!-- Slides -->
+      <div id="hero-slides">
+        <div class="hero-slide skeleton" style="opacity:1"></div>
       </div>
+
+      <!-- Overlay -->
+      <div id="hero-overlay"></div>
+
+      <!-- Miniatures desktop (droite) -->
+      <div id="hero-thumbs" class="absolute right-4 top-1/2 -translate-y-1/2 flex-col gap-2.5 hidden md:flex z-10"></div>
+
+      <!-- Contenu texte -->
+      <a id="hero-link" href="#" class="absolute inset-0 flex flex-col items-center justify-end pb-16 text-center text-white px-6 z-10">
+        <span id="hero-cat" class="text-xs font-bold tracking-widest uppercase mb-3 text-brand-400"></span>
+        <h1 id="hero-title" class="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight max-w-4xl drop-shadow"></h1>
+        <p id="hero-date" class="text-sm mt-3 text-white/50 font-medium"></p>
+      </a>
+
+      <!-- Dots (bas gauche) -->
+      <div id="hero-dots" class="absolute bottom-6 left-6 flex items-center gap-2 z-10"></div>
+
     </section>
 
-    <!-- ============================================================
-      GRILLE D'ARTICLES
-    =============================================================== -->
-    <section aria-labelledby="articles-title" class="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
+    <!-- BANDEAU CATÉGORIES -->
+    <div class="border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-8 h-11 overflow-x-auto text-sm font-semibold text-gray-500 whitespace-nowrap">
+        <a href="categorie.html?cat=mode"   class="hover:text-gray-900 hover:border-b-2 hover:border-brand-400 transition-colors pb-0.5">Mode</a>
+        <a href="categorie.html?cat=sport"  class="hover:text-gray-900 hover:border-b-2 hover:border-brand-400 transition-colors pb-0.5">Sport &amp; Bien-être</a>
+        <a href="categorie.html?cat=hotels" class="hover:text-gray-900 hover:border-b-2 hover:border-brand-400 transition-colors pb-0.5">Hôtels &amp; Voyages</a>
+      </div>
+    </div>
 
+    <!-- GRILLE ARTICLES -->
+    <section aria-labelledby="articles-title" class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center justify-between mb-8">
-        <h2 id="articles-title" class="text-2xl font-bold tracking-tight text-gray-900">
-          Derniers articles
-        </h2>
-        <a href="#" class="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
-          Voir tout →
-        </a>
+        <h2 id="articles-title" class="text-xl font-bold tracking-tight text-gray-900">Derniers articles</h2>
       </div>
 
-      <!-- Les cartes sont injectées dynamiquement par le script Supabase -->
       <div id="articles-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        <!-- Squelettes de chargement -->
-        <div class="skeleton-card rounded-2xl bg-gray-100 animate-pulse h-72"></div>
-        <div class="skeleton-card rounded-2xl bg-gray-100 animate-pulse h-72"></div>
-        <div class="skeleton-card rounded-2xl bg-gray-100 animate-pulse h-72"></div>
-
+        <div class="skeleton rounded-xl h-72"></div>
+        <div class="skeleton rounded-xl h-72"></div>
+        <div class="skeleton rounded-xl h-72"></div>
       </div>
     </section>
 
   </main>
 
-  <!-- ============================================================
-    FOOTER
-  =============================================================== -->
+  <!-- FOOTER -->
   <footer class="bg-gray-950 text-gray-400">
 
-    <!-- Newsletter -->
-    <section id="newsletter" aria-labelledby="newsletter-title" class="max-w-6xl mx-auto px-4 sm:px-6 py-14 border-b border-gray-800">
+    <section id="newsletter" class="max-w-7xl mx-auto px-4 sm:px-6 py-14 border-b border-gray-800">
       <div class="max-w-xl mx-auto text-center space-y-4">
-        <h2 id="newsletter-title" class="text-2xl font-bold text-white tracking-tight">
-          Les meilleures expériences, sans passer des heures à chercher
-        </h2>
-        <p class="text-gray-400">
-          Reçois un mail dès qu'un nouvel article est publié. Pas de spam, désinscription en un clic.
-        </p>
+        <h2 class="text-2xl font-bold text-white tracking-tight">Les meilleures expériences, sans passer des heures à chercher</h2>
+        <p class="text-gray-400">Reçois un mail dès qu'un nouvel article est publié. Pas de spam, désinscription en un clic.</p>
         <form id="newsletter-form" class="flex flex-col sm:flex-row gap-3 mt-2" onsubmit="handleNewsletter(event)">
           <label for="email-input" class="sr-only">Adresse e-mail</label>
           <input id="email-input" type="email" placeholder="ton@email.com" required
-            class="flex-1 rounded-xl px-4 py-2.5 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition" />
+            class="flex-1 rounded-xl px-4 py-2.5 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition" />
           <button type="submit" id="newsletter-btn"
-            class="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-medium text-sm transition-colors whitespace-nowrap">
-            S'abonner
-          </button>
+            class="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-medium text-sm transition-colors whitespace-nowrap">S'abonner</button>
         </form>
         <p id="newsletter-success" class="hidden text-sm text-emerald-400 font-medium">✓ Inscription confirmée !</p>
-        <p id="newsletter-error" class="hidden text-sm text-red-400">Cette adresse est déjà inscrite ou une erreur est survenue.</p>
+        <p id="newsletter-error"   class="hidden text-sm text-red-400">Cette adresse est déjà inscrite ou une erreur est survenue.</p>
         <p class="text-xs text-gray-600">En t'abonnant, tu acceptes notre politique de confidentialité.</p>
       </div>
     </section>
 
-    <!-- Liens & infos -->
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-8 border-b border-gray-800">
-
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-8 border-b border-gray-800">
       <div class="space-y-3">
-        <span class="font-sans font-bold text-lg text-white">Les Heures <span class="text-brand-400">Flâneuses</span></span>
-        <p class="text-sm leading-relaxed">Montres, mode, sport & bien-être, hôtels — des sélections sincères pour vivre mieux.</p>
+        <span class="font-bold text-lg text-white">Les Heures <span class="text-brand-400">Flâneuses</span></span>
+        <p class="text-sm leading-relaxed">Mode, sport & bien-être, hôtels — des sélections sincères pour vivre mieux.</p>
       </div>
-
       <nav aria-label="Rubriques">
         <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-3">Rubriques</h3>
-        <ul class="space-y-2 text-sm">          <li><a href="categorie.html?cat=mode" class="hover:text-white transition-colors">Mode</a></li>
-          <li><a href="categorie.html?cat=sport" class="hover:text-white transition-colors">Sport &amp; Bien-être</a></li>
+        <ul class="space-y-2 text-sm">
+          <li><a href="categorie.html?cat=mode"   class="hover:text-white transition-colors">Mode</a></li>
+          <li><a href="categorie.html?cat=sport"  class="hover:text-white transition-colors">Sport &amp; Bien-être</a></li>
           <li><a href="categorie.html?cat=hotels" class="hover:text-white transition-colors">Hôtels &amp; Voyages</a></li>
         </ul>
       </nav>
-
       <nav aria-label="À propos">
         <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-3">À propos</h3>
         <ul class="space-y-2 text-sm">
-          <li><a href="ecrire.html" class="hover:text-white transition-colors">Écrire pour nous</a></li>
-          <li><a href="contact.html" class="hover:text-white transition-colors">Contact</a></li>
+          <li><a href="ecrire.html"          class="hover:text-white transition-colors">Écrire pour nous</a></li>
+          <li><a href="contact.html"         class="hover:text-white transition-colors">Contact</a></li>
           <li><a href="mentions-legales.html" class="hover:text-white transition-colors">Mentions légales</a></li>
-          <li><a href="confidentialite.html" class="hover:text-white transition-colors">Confidentialité</a></li>
+          <li><a href="confidentialite.html"  class="hover:text-white transition-colors">Confidentialité</a></li>
         </ul>
       </nav>
-
       <div>
         <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-3">Réseaux sociaux</h3>
-        <div class="flex flex-wrap gap-3">
-
-          <!-- LinkedIn -->
-          <a href="https://www.linkedin.com/in/marius-masoch" target="_blank" rel="noopener noreferrer" aria-label="Suivre sur LinkedIn" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 hover:text-white transition-colors">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
+        <div class="flex gap-3">
+          <a href="https://www.linkedin.com/in/marius-masoch" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+            class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 hover:text-white transition-colors">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </a>
-
-
         </div>
       </div>
-
     </div>
 
-    <!-- Copyright -->
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-600">
       <span>© 2026 Les Heures Flâneuses. Tous droits réservés.</span>
-      <div class="flex items-center gap-4">
-        <span>Fait avec passion et ☕</span>
-      </div>
+      <span>Fait avec passion et ☕</span>
     </div>
 
   </footer>
 
-  <!-- ============================================================
-    SCRIPTS UI (recherche + menu mobile)
-  =============================================================== -->
   <script>
-  // ============================================================
-  // SUPABASE — Colle ici tes identifiants (Project Settings > API)
-  // ============================================================
   const SUPABASE_URL  = 'https://yrgylnmhqcimwgmjponj.supabase.co';
   const SUPABASE_ANON = 'sb_publishable__SdwJpIWNVfPfVNX7eFc-w_mQA8av6H';
-
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, SUPABASE_ANON);
-  // ============================================================
 
-  // Couleurs par catégorie
   const CAT_STYLES = {
-    'mode':      { bg: 'from-rose-50 to-pink-50',        tag: 'bg-rose-100 text-rose-700' },
-    'sport':     { bg: 'from-blue-50 to-cyan-50',        tag: 'bg-blue-100 text-blue-700' },
-    'hotels':    { bg: 'from-stone-50 to-orange-50',     tag: 'bg-stone-100 text-stone-700' },
+    'mode':   { tag: 'bg-rose-100 text-rose-700' },
+    'sport':  { tag: 'bg-blue-100 text-blue-700' },
+    'hotels': { tag: 'bg-stone-100 text-stone-700' },
   };
   const CAT_LABELS = {
-    'montres': 'Montres', 'mode': 'Mode',
-    'sport': 'Sport & Bien-être', 'hotels': 'Hôtels & Voyages',
+    'montres':'Montres', 'mode':'Mode',
+    'sport':'Sport & Bien-être', 'hotels':'Hôtels & Voyages',
   };
 
   function formatDate(iso) {
-    return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    return new Date(iso).toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
   }
 
-  function buildCard(article) {
-    const style  = CAT_STYLES[article.categorie] || CAT_STYLES['montres'];
-    const label  = CAT_LABELS[article.categorie] || article.categorie;
-    const date   = formatDate(article.date_creation);
-    const mins   = article.temps_lecture ? `${article.temps_lecture} min` : '';
-    const meta   = [date, mins].filter(Boolean).join(' · ');
+  // ---- GRILLE ARTICLES ----
+  function buildCard(a) {
+    const style = CAT_STYLES[a.categorie] || { tag:'bg-gray-100 text-gray-600' };
+    const label = CAT_LABELS[a.categorie] || a.categorie;
+    const date  = formatDate(a.date_creation);
+    const mins  = a.temps_lecture ? `${a.temps_lecture} min` : '';
+    const meta  = [date, mins].filter(Boolean).join(' · ');
+    const url   = `article.html?slug=${a.slug || a.id}`;
+    const img   = a.image_url
+      ? `<img src="${a.image_url}" alt="${a.titre}" class="w-full h-48 object-cover" loading="lazy" />`
+      : `<div class="h-48 bg-gray-100 flex items-center justify-center"><svg class="w-8 h-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>`;
 
-    const image  = article.image_url
-      ? `<img src="${article.image_url}" alt="${article.titre}" class="w-full h-44 object-cover" />`
-      : `<div class="h-44 bg-gradient-to-br ${style.bg} flex items-center justify-center">
-           <svg class="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
-             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-           </svg>
-         </div>`;
-
-    return `
-      <article class="article-card reveal flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-        ${image}
-        <div class="flex flex-col flex-1 p-5 space-y-3">
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded-full ${style.tag} text-xs font-semibold">${label}</span>
-            <span class="text-gray-400 text-xs">${meta}</span>
-          </div>
-          <h3 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
-            <a href="article.html?slug=${article.slug || article.id}">${article.titre}</a>
-          </h3>
-          <p class="text-sm text-gray-500 leading-relaxed flex-1">${article.extrait || ''}</p>
-          <a href="article.html?slug=${article.slug || article.id}" class="read-btn">
-            Lire <span aria-hidden="true">→</span>
-          </a>
+    return `<article class="article-card reveal flex flex-col bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      ${img}
+      <div class="flex flex-col flex-1 p-5 space-y-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded-full ${style.tag} text-xs font-semibold">${label}</span>
+          <span class="text-gray-400 text-xs">${meta}</span>
         </div>
-      </article>`;
+        <h3 class="font-semibold text-gray-900 leading-snug hover:text-brand-600 transition-colors">
+          <a href="${url}">${a.titre}</a>
+        </h3>
+        <p class="text-sm text-gray-500 leading-relaxed flex-1">${a.extrait || ''}</p>
+        <a href="${url}" class="read-btn">Lire <span aria-hidden="true">→</span></a>
+      </div>
+    </article>`;
   }
 
   async function loadArticles() {
@@ -429,167 +293,113 @@
       .order('date_creation', { ascending: false })
       .limit(6);
 
-    if (error) {
-      console.error('Supabase error:', error.message);
-      grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-12">
-        Impossible de charger les articles. Vérifiez vos clés Supabase.
-      </p>`;
+    if (error || !data) {
+      grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-12">Impossible de charger les articles.</p>`;
       return;
     }
-
     if (!data.length) {
-      grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-12">
-        Aucun article publié pour l'instant.
-      </p>`;
+      grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-12">Aucun article publié pour l'instant.</p>`;
       return;
     }
-
     grid.innerHTML = data.map(buildCard).join('');
     window.revealAll && window.revealAll();
   }
 
-  // ============================================================
-  // CARROUSEL HERO — 5 derniers articles publiés
-  // ============================================================
+  // ---- CARROUSEL HERO ----
   let _slides = [], _idx = 0, _timer = null;
 
   function buildCarousel(articles) {
     if (!articles || !articles.length) return;
     _slides = articles;
 
-    // Slides (images de fond empilées)
-    document.getElementById('carousel-slides').innerHTML = articles.map((a, i) => `
-      <div class="carousel-slide absolute inset-0 transition-opacity duration-700 ${i === 0 ? 'opacity-100' : 'opacity-0'}"
-           style="background:url('${a.image_url || ''}') center/cover no-repeat;background-color:#1f2937;"></div>
-    `).join('');
+    document.getElementById('hero-slides').innerHTML = articles.map((a, i) =>
+      `<div class="hero-slide" style="background-image:url('${a.image_url || ''}');opacity:${i===0?1:0}"></div>`
+    ).join('');
 
-    // Points de navigation
-    document.getElementById('carousel-dots').innerHTML = articles.map((_, i) => `
-      <button onclick="slideTo(${i})" aria-label="Slide ${i+1}"
-        class="carousel-dot transition-all duration-300 rounded-full h-2 ${i === 0 ? 'w-7 bg-white' : 'w-2 bg-white/40'}"></button>
-    `).join('');
+    document.getElementById('hero-dots').innerHTML = articles.map((_, i) =>
+      `<button onclick="slideTo(${i})" aria-label="Slide ${i+1}" class="hero-dot ${i===0?'active':'w-2'}" style="width:${i===0?'28px':'8px'}"></button>`
+    ).join('');
 
-    // Miniatures droite
-    document.getElementById('carousel-thumbs').innerHTML = articles.map((a, i) => `
-      <button onclick="slideTo(${i})" aria-label="${a.titre}"
-        class="carousel-thumb w-14 h-14 rounded-xl overflow-hidden border-2 transition-all duration-300 ${i === 0 ? 'border-white scale-105' : 'border-white/30 opacity-50'}"
-        style="background:url('${a.image_url || ''}') center/cover no-repeat;background-color:#374151;"></button>
-    `).join('');
+    document.getElementById('hero-thumbs').innerHTML = articles.map((a, i) =>
+      `<button onclick="slideTo(${i})" aria-label="${a.titre}" class="hero-thumb ${i===0?'active':''}"
+        style="background-image:url('${a.image_url || ''}')"></button>`
+    ).join('');
 
     updateCarousel(0);
     startTimer();
   }
 
   function updateCarousel(idx) {
-    const a = _slides[idx];
+    const a   = _slides[idx];
     const cat = CAT_LABELS[a.categorie] || a.categorie || '';
-    const date = new Date(a.date_creation).toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
     const url = a.slug ? `article.html?slug=${a.slug}` : `article.html?id=${a.id}`;
 
-    document.getElementById('hero-cat').innerHTML  = `<span style="color:#f59e0b">#</span> ${cat}`;
+    document.getElementById('hero-cat').textContent   = cat;
     document.getElementById('hero-title').textContent = a.titre;
-    document.getElementById('hero-date').textContent  = date;
+    document.getElementById('hero-date').textContent  = formatDate(a.date_creation);
     document.getElementById('hero-link').href = url;
 
-    document.querySelectorAll('.carousel-slide').forEach((el, i) =>
-      el.style.opacity = i === idx ? '1' : '0');
-
-    document.querySelectorAll('.carousel-dot').forEach((el, i) => {
-      el.className = `carousel-dot transition-all duration-300 rounded-full h-2 ${i === idx ? 'w-7 bg-white' : 'w-2 bg-white/40'}`;
+    document.querySelectorAll('.hero-slide').forEach((el, i) => el.style.opacity = i===idx?'1':'0');
+    document.querySelectorAll('.hero-dot').forEach((el, i) => {
+      el.className = `hero-dot ${i===idx?'active':''}`;
+      el.style.width = i===idx ? '28px' : '8px';
     });
-
-    document.querySelectorAll('.carousel-thumb').forEach((el, i) => {
-      el.className = `carousel-thumb w-14 h-14 rounded-xl overflow-hidden border-2 transition-all duration-300 ${i === idx ? 'border-white scale-105' : 'border-white/30 opacity-50'}`;
+    document.querySelectorAll('.hero-thumb').forEach((el, i) => {
+      el.className = `hero-thumb ${i===idx?'active':''}`;
     });
   }
 
-  function slideTo(idx) {
-    _idx = idx;
-    updateCarousel(idx);
-    clearInterval(_timer);
-    startTimer();
-  }
-
-  function startTimer() {
-    _timer = setInterval(() => {
-      _idx = (_idx + 1) % _slides.length;
-      updateCarousel(_idx);
-    }, 5000);
-  }
+  function slideTo(idx) { _idx = idx; updateCarousel(idx); clearInterval(_timer); startTimer(); }
+  function startTimer() { _timer = setInterval(() => { _idx = (_idx+1)%_slides.length; updateCarousel(_idx); }, 5000); }
 
   async function loadCarousel() {
-    // 1. Articles marqués carrousel
-    const { data: starred } = await db
-      .from('articles')
+    const { data: starred } = await db.from('articles')
       .select('id, titre, categorie, image_url, slug, date_creation')
-      .eq('statut', 'publié')
-      .eq('is_carousel', true)
-      .order('date_creation', { ascending: false })
-      .limit(5);
-
+      .eq('statut', 'publié').eq('is_carousel', true)
+      .order('date_creation', { ascending: false }).limit(5);
     if (starred && starred.length) { buildCarousel(starred); return; }
 
-    // 2. Fallback : 5 derniers publiés
-    const { data: latest } = await db
-      .from('articles')
+    const { data: latest } = await db.from('articles')
       .select('id, titre, categorie, image_url, slug, date_creation')
       .eq('statut', 'publié')
-      .order('date_creation', { ascending: false })
-      .limit(5);
-
+      .order('date_creation', { ascending: false }).limit(5);
     if (latest && latest.length) buildCarousel(latest);
   }
 
   loadCarousel();
   loadArticles();
 
-  // --- Newsletter : inscription ---
+  // ---- NEWSLETTER ----
   async function handleNewsletter(e) {
     e.preventDefault();
     const email = document.getElementById('email-input').value.trim();
     const btn   = document.getElementById('newsletter-btn');
     document.getElementById('newsletter-success').classList.add('hidden');
     document.getElementById('newsletter-error').classList.add('hidden');
-    btn.disabled = true;
-    btn.textContent = '…';
+    btn.disabled = true; btn.textContent = '…';
 
     const { error } = await db.from('abonnes').insert([{ email }]);
-
     if (error) {
       document.getElementById('newsletter-error').classList.remove('hidden');
     } else {
       document.getElementById('newsletter-form').classList.add('hidden');
       document.getElementById('newsletter-success').classList.remove('hidden');
     }
-    btn.disabled = false;
-    btn.textContent = 'S\'abonner';
+    btn.disabled = false; btn.textContent = "S'abonner";
   }
   </script>
 
   <script>
-    // --- Mobile menu ---
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    document.getElementById('menu-btn').addEventListener('click', () =>
+      document.getElementById('mobile-menu').classList.toggle('hidden'));
 
-    // --- Accès admin protégé par mot de passe ---
-    // Pour changer le mot de passe, modifie la valeur ci-dessous :
     const ADMIN_PASSWORD = 'bytepulse2026';
-
     function adminAccess() {
-      // Si déjà authentifié dans cette session, accès direct
-      if (sessionStorage.getItem('bp_admin') === '1') {
-        window.location.href = 'admin.html';
-        return;
-      }
+      if (sessionStorage.getItem('bp_admin') === '1') { window.location.href = 'admin.html'; return; }
       const pwd = prompt('Mot de passe administrateur :');
-      if (pwd === null) return; // annulé
-      if (pwd === ADMIN_PASSWORD) {
-        sessionStorage.setItem('bp_admin', '1');
-        window.location.href = 'admin.html';
-      } else {
-        alert('Mot de passe incorrect.');
-      }
+      if (pwd === null) return;
+      if (pwd === ADMIN_PASSWORD) { sessionStorage.setItem('bp_admin', '1'); window.location.href = 'admin.html'; }
+      else alert('Mot de passe incorrect.');
     }
   </script>
   <script src="/cookie-consent.js"></script>
