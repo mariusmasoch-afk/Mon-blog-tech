@@ -14,12 +14,6 @@
   </url>
 
   <url>
-    <loc>https://lesheuresflaneuses.fr/categorie.html?cat=montres</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
     <loc>https://lesheuresflaneuses.fr/categorie.html?cat=mode</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
