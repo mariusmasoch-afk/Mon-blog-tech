@@ -183,13 +183,24 @@
   </footer>
 
   <script>
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
       e.preventDefault();
-      document.getElementById('form-msg').classList.remove('hidden');
-      e.target.reset();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.textContent = 'Envoi…';
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: new FormData(e.target)
+      });
+      if (res.ok) {
+        document.getElementById('form-msg').classList.remove('hidden');
+        e.target.reset();
+      } else {
+        alert('Une erreur est survenue. Réessayez ou écrivez-nous à contact@lesheuresflaneuses.fr');
+      }
+      btn.disabled = false; btn.textContent = 'Envoyer ma proposition';
     }
   </script>
   <script src="/cookie-consent.js"></script>
-  <script>document.getElementById('menu-btn').addEventListener('click',()=>document.getElementById('mobile-menu').classList.toggle('hidden'));</script>
+  <script>document.getElementById('menu-btn')?.addEventListener('click',()=>document.getElementById('mobile-menu').classList.toggle('hidden'));</script>
 </body>
 </html>
