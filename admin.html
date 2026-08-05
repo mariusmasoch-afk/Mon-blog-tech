@@ -7,7 +7,7 @@
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" href="/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TechFlair — Administration</title>
+  <title>Les Heures Flâneuses — Administration</title>
 
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -102,7 +102,7 @@
 
   <script>
     // ── Hash SHA-256 du mot de passe (ne pas stocker le mot de passe en clair)
-    // Mot de passe par défaut : TechFlair2026!
+    // Mot de passe par défaut : Les Heures Flâneuses2026!
     // Pour changer : ouvrir la console et taper sha256('NouveauMotDePasse')
     //   puis remplacer la valeur de PASS_HASH ci-dessous.
     const PASS_HASH = 'baf18531f9bfa91e440ce1bddae40089cc25e3076f51b2ad16113d85c3034ed4';
@@ -142,7 +142,7 @@
     <!-- Logo -->
     <div class="h-16 flex items-center px-5 border-b border-gray-100 shrink-0">
       <a href="index.html" class="font-sans font-bold text-lg tracking-tight text-gray-900">
-        Tech<span class="text-brand-500">Flair</span>
+        Les Heures <span class="text-brand-500">Flâneuses</span>
       </a>
       <span class="ml-2 text-xs font-semibold px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">Admin</span>
     </div>
@@ -702,7 +702,7 @@
           <h3 class="font-semibold text-gray-800">Identité du blog</h3>
           <div>
             <label class="text-xs font-medium text-gray-500 mb-1 block">Nom du blog</label>
-            <input type="text" value="TechFlair" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
+            <input type="text" value="Les Heures Flâneuses" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
           </div>
           <div>
             <label class="text-xs font-medium text-gray-500 mb-1 block">Description</label>
@@ -710,7 +710,7 @@
           </div>
           <div>
             <label class="text-xs font-medium text-gray-500 mb-1 block">Email de contact</label>
-            <input type="email" placeholder="contact@tech-flair.com" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
+            <input type="email" placeholder="contact@lesheuresflaneuses.fr" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400" />
           </div>
         </div>
 
@@ -1126,7 +1126,7 @@
         <div class="text-3xl font-bold text-amber-500">9.2</div>
         <div>
           <div class="flex gap-0.5 text-amber-400 text-lg">★★★★★</div>
-          <div class="text-xs text-gray-500 mt-0.5">Note TechFlair</div>
+          <div class="text-xs text-gray-500 mt-0.5">Note Les Heures Flâneuses</div>
         </div>
         <div class="ml-auto text-xs text-gray-400 italic">Bloc notation produit</div>
       </div><p><br></p>`;
@@ -1140,7 +1140,7 @@
           <div style="font-size:2.5rem;font-weight:700;color:#f59e0b;line-height:1;">8.5</div>
           <div>
             <div style="color:#f59e0b;font-size:1.1rem;letter-spacing:.05em;">★★★★☆</div>
-            <div style="font-size:.75rem;color:#9ca3af;margin-top:.15rem;">Note TechFlair</div>
+            <div style="font-size:.75rem;color:#9ca3af;margin-top:.15rem;">Note Les Heures Flâneuses</div>
           </div>
           <div style="margin-left:auto;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af;">Verdict rapide</div>
         </div>
@@ -1661,7 +1661,7 @@
   }
 
   function showPublishSuccess(slug, titre, extrait, imageUrl, isUpdate, sendNl = true) {
-    const articleUrl = `https://tech-flair.com/article.html?slug=${slug}`;
+    const articleUrl = `https://lesheuresflaneuses.fr/article.html?slug=${slug}`;
     const toast = document.getElementById('toast');
     document.getElementById('toast-msg').innerHTML = isUpdate
       ? `Article mis à jour ! <a href="${articleUrl}" target="_blank" class="underline ml-1">Voir en ligne →</a>`
@@ -1730,7 +1730,7 @@
   async function sendNewsletterForArticle(id) {
     const { data: a } = await db.from('articles').select('slug, titre, extrait, image_url').eq('id', id).single();
     if (!a) { showToast('Impossible de charger l\'article.', false); return; }
-    const articleUrl = `https://tech-flair.com/article.html?slug=${a.slug}`;
+    const articleUrl = `https://lesheuresflaneuses.fr/article.html?slug=${a.slug}`;
     showNewsletterPrompt(a.slug, a.titre, a.extrait, a.image_url, articleUrl, false);
   }
 
@@ -1764,16 +1764,16 @@
             Lire l'article →
           </a>
           <hr style="border:none;border-top:1px solid #f3f4f6;margin:32px 0 16px;" />
-          <p style="font-size:12px;color:#9ca3af;">Tu reçois cet email car tu es abonné à TechFlair. <a href="https://tech-flair.com/unsubscribe.html?email=${encodeURIComponent(email)}" style="color:#9ca3af;">Se désabonner</a></p>
+          <p style="font-size:12px;color:#9ca3af;">Tu reçois cet email car tu es abonné à Les Heures Flâneuses. <a href="https://lesheuresflaneuses.fr/unsubscribe.html?email=${encodeURIComponent(email)}" style="color:#9ca3af;">Se désabonner</a></p>
         </div>`;
       try {
         const res = await fetch('https://api.brevo.com/v3/smtp/email', {
           method: 'POST',
           headers: { 'api-key': BREVO_KEY, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            sender:      { name: 'TechFlair', email: 'contact@tech-flair.com' },
+            sender:      { name: 'Les Heures Flâneuses', email: 'contact@lesheuresflaneuses.fr' },
             to:          [{ email }],
-            subject:     `Nouvel article TechFlair : ${titre}`,
+            subject:     `Nouvel article Les Heures Flâneuses : ${titre}`,
             htmlContent,
           }),
         });
