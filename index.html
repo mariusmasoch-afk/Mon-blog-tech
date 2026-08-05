@@ -65,16 +65,14 @@
 
     /* Hero title hover */
     #hero-link #hero-title {
-      display: inline-block;
-      background-image: linear-gradient(currentColor, currentColor);
-      background-position: 0 100%;
-      background-repeat: no-repeat;
-      background-size: 0% 2px;
-      transition: background-size .3s ease, letter-spacing .3s ease;
+      text-decoration: underline;
+      text-decoration-color: transparent;
+      text-underline-offset: 7px;
+      text-decoration-thickness: 2px;
+      transition: text-decoration-color .25s ease;
     }
     #hero-link:hover #hero-title {
-      background-size: 100% 2px;
-      letter-spacing: .01em;
+      text-decoration-color: rgba(255,255,255,.85);
     }
 
     /* Dot */
