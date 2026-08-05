@@ -269,8 +269,8 @@
     };
 
     const params = new URLSearchParams(window.location.search);
-    const cat = params.get('cat') || 'tests';
-    const meta = CAT_META[cat] || CAT_META['gadgets'];
+    const cat = params.get('cat') || 'montres';
+    const meta = CAT_META[cat] || CAT_META['montres'];
 
     // Mise à jour du head
     document.title = `Les Heures Flâneuses — ${meta.label}`;
