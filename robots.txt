@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /admin.html
 Allow: /
 
-Sitemap: https://tech-flair.com/sitemap.php
+Sitemap: https://lesheuresflaneuses.fr/sitemap.xml
