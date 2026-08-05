@@ -63,6 +63,20 @@
     .hero-thumb.active { border-color:#fff; transform:scale(1.06); opacity:1; }
     .hero-thumb:not(.active) { opacity:.5; }
 
+    /* Hero title hover */
+    #hero-link #hero-title {
+      display: inline-block;
+      background-image: linear-gradient(currentColor, currentColor);
+      background-position: 0 100%;
+      background-repeat: no-repeat;
+      background-size: 0% 2px;
+      transition: background-size .3s ease, letter-spacing .3s ease;
+    }
+    #hero-link:hover #hero-title {
+      background-size: 100% 2px;
+      letter-spacing: .01em;
+    }
+
     /* Dot */
     .hero-dot { height:6px; border-radius:4px; background:rgba(255,255,255,.35); transition:width .3s, background .3s; }
     .hero-dot.active { width:28px !important; background:#fff; }
