@@ -17,7 +17,7 @@
 
   banner.innerHTML =
     '<p style="margin:0;color:#d1d5db;flex:1;min-width:200px">' +
-      'TechFlair utilise <strong style="color:#f9fafb">Google Analytics</strong> pour mesurer son audience. ' +
+      'Les Heures Flâneuses utilise <strong style="color:#f9fafb">Google Analytics</strong> pour mesurer son audience. ' +
       '<a href="/confidentialite.html" style="color:#38bdf8;text-decoration:underline">En savoir plus</a>' +
     '</p>' +
     '<div style="display:flex;gap:.5rem;flex-shrink:0">' +
