@@ -204,14 +204,10 @@
     const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
     const CAT_STYLES = {
-      'tests':     { badge:'bg-orange-100 text-orange-700',  label:'Tests & Avis' },
-      'gadgets':   { badge:'bg-amber-100 text-amber-700',    label:'Gadgets' },
-      'logiciels': { badge:'bg-yellow-100 text-yellow-800',  label:'Apps et logiciels' },
-      'hotels':    { badge:'bg-stone-100 text-stone-700',    label:'Hôtels & Séjours' },
-      'montres':   { badge:'bg-amber-100 text-amber-800',     label:'Montres' },
-      'mode':      { badge:'bg-rose-100 text-rose-700',       label:'Mode' },
-      'sport':     { badge:'bg-blue-100 text-blue-700',      label:'Sport & Bien-être' },
-      'hotels':    { badge:'bg-stone-100 text-stone-700',     label:'Hôtels & Voyages' },
+      'montres':   { badge:'bg-amber-100 text-amber-800',  label:'Montres' },
+      'mode':      { badge:'bg-rose-100 text-rose-700',    label:'Mode' },
+      'sport':     { badge:'bg-blue-100 text-blue-700',    label:'Sport & Bien-être' },
+      'hotels':    { badge:'bg-stone-100 text-stone-700',  label:'Hôtels & Voyages' },
     };
 
     const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
