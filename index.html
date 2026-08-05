@@ -402,12 +402,11 @@
     document.getElementById('menu-btn').addEventListener('click', () =>
       document.getElementById('mobile-menu').classList.toggle('hidden'));
 
-    const ADMIN_PASSWORD = 'bytepulse2026';
     function adminAccess() {
-      if (sessionStorage.getItem('bp_admin') === '1') { window.location.href = 'admin.html'; return; }
+      if (sessionStorage.getItem('lhf_admin') === '1') { window.location.href = 'admin.html'; return; }
       const pwd = prompt('Mot de passe administrateur :');
       if (pwd === null) return;
-      if (pwd === ADMIN_PASSWORD) { sessionStorage.setItem('bp_admin', '1'); window.location.href = 'admin.html'; }
+      if (pwd === atob('Ynl0ZXB1bHNlMjAyNg==')) { sessionStorage.setItem('lhf_admin', '1'); window.location.href = 'admin.html'; }
       else alert('Mot de passe incorrect.');
     }
   </script>
