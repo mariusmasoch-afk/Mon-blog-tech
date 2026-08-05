@@ -137,14 +137,18 @@
       <h2 class="text-xl font-bold mb-2">Proposer un article</h2>
       <p class="text-gray-400 text-sm mb-6">Remplissez ce formulaire et on vous répond sous 48h.</p>
       <form class="space-y-4" onsubmit="handleSubmit(event)">
+        <input type="hidden" name="access_key" value="932bdedb-2767-452b-9d77-8d55b70acbbe" />
+        <input type="hidden" name="subject" value="Proposition d'article — Les Heures Flâneuses" />
+        <input type="hidden" name="from_name" value="Les Heures Flâneuses — Écrire" />
+        <input type="checkbox" name="botcheck" class="hidden" />
         <div class="grid sm:grid-cols-2 gap-4">
           <div>
             <label class="text-xs text-gray-400 mb-1 block">Prénom &amp; Nom</label>
-            <input type="text" required placeholder="Sophie Marchand" class="w-full text-sm bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500"/>
+            <input type="text" name="name" required placeholder="Sophie Marchand" class="w-full text-sm bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500"/>
           </div>
           <div>
             <label class="text-xs text-gray-400 mb-1 block">Email</label>
-            <input type="email" required placeholder="vous@email.com" class="w-full text-sm bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500"/>
+            <input type="email" name="email" required placeholder="vous@email.com" class="w-full text-sm bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500"/>
           </div>
         </div>
         <div>
