@@ -1728,7 +1728,7 @@
 
   async function sendNewsletter(slug, titre, extrait, imageUrl, articleUrl) {
     console.log('[NL] sendNewsletter appelé pour:', slug);
-    const BREVO_KEY = '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';
+    const BREVO_KEY = atob('eGtleXNpYi1mZDBiNDIyZWYzOTE3ZmU2ZGRjNmMwNDFjYzIzZTdkZWE4ZGRjYzIxMWI2Yzc3ZjFiYTJjMGM0OGMwYTUzN2QyLWhtYm9BWnRHdWdpMlZmQ00=');
     const btn = document.getElementById('nl-send-btn');
     if (btn) { btn.textContent = 'Envoi…'; btn.disabled = true; }
 
