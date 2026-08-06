@@ -153,11 +153,13 @@
       <div id="hero-thumbs" class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2.5 z-20"></div>
 
       <!-- Contenu texte -->
-      <a id="hero-link" href="#" class="absolute inset-0 flex flex-col items-center justify-end pb-16 text-center text-white px-6 z-10">
-        <span id="hero-cat" class="text-xs font-bold tracking-widest uppercase mb-3 text-brand-400"></span>
-        <h1 id="hero-title" class="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight max-w-4xl drop-shadow"></h1>
-        <p id="hero-date" class="text-sm mt-3 text-white/50 font-medium"></p>
-      </a>
+      <div class="absolute inset-0 flex flex-col items-center justify-end pb-16 text-center text-white px-6 z-10 pointer-events-none">
+        <a id="hero-link" href="#" class="pointer-events-auto flex flex-col items-center gap-1">
+          <span id="hero-cat" class="text-xs font-bold tracking-widest uppercase mb-3 text-brand-400"></span>
+          <h1 id="hero-title" class="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight max-w-4xl drop-shadow"></h1>
+          <p id="hero-date" class="text-sm mt-3 text-white/50 font-medium"></p>
+        </a>
+      </div>
 
       <!-- Dots (bas gauche) -->
       <div id="hero-dots" class="absolute bottom-6 left-6 flex items-center gap-2 z-20"></div>
